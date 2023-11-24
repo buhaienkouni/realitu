@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="realitu">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/realitu.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
