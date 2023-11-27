@@ -1,0 +1,59 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Login | KSI</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+          integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styling.css}">
+    <style>
+    </style>
+</head>
+
+<body style="background-image: linear-gradient(to right, #8360c3, #2ebf91);">
+<div class="container-sm mt-4">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert" th:if="${param.error}">
+        <p class="mb-0">Ooops... Something went wrong))) </p>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+    <div class="alert alert-primary alert-dismissible fade show" role="alert" th:if="${param.logout}">
+        <p class="mb-0">You have been logged out.</p>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+</div>
+<div class="align-self-center">
+    <div class="container" style="padding-top: 10%; padding-bottom: 10%;">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-center">
+                <h1 class="display-4 mb-5">LOGIN</h1>
+                <form class="form-signin" th:action="@{/login}" th:method="post">
+                    <div class="mb-3">
+                        <input autofocus="true" class="form-control" name="email" placeholder="Email" type="text"/>
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" name="password" placeholder="Password" type="password"/>
+                    </div>
+                    <div class="mb-5 d-grid gap-2">
+                        <button class="btn btn-outline-light" type="submit">Login</button>
+                    </div>
+                </form>
+                <div class="mt-3">
+                    <p class="mb-1">No account?</p>
+                    <a href="/register" role="button">SIGNUP</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script crossorigin="anonymous"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js">
+</script>
+<script crossorigin="anonymous"
+        integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js">
+</script>
+</body>
+</html>
