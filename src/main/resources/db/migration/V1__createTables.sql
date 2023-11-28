@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS articles (
     id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title            VARCHAR(255) UNIQUE NOT NULL,
     content          TEXT NOT NULL,
-    creation_date    TIMESTAMP WITH TIME ZONE NOT NULL,
+    creation_date    TIMESTAMP NOT NULL,
     category         VARCHAR(50) NOT NULL,
     author_id        UUID NOT NULL,
     image_id         UUID,

@@ -7,8 +7,8 @@ import ua.kpi.realitu.web.model.UserDto;
 @Component
 public class UserEntityToDtoConverter {
 
-    public UserDto.ReadDto convert(UserEntity userEntity) {
-        UserDto.ReadDto userDto = new UserDto.ReadDto();
+    public UserDto convert(UserEntity userEntity) {
+        UserDto userDto = new UserDto();
 
         userDto.setId(userEntity.getId());
         userDto.setUsername(userEntity.getUsername());

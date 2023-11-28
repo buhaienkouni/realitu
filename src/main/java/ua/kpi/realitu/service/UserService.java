@@ -45,7 +45,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<UserDto.ReadDto> getAllCopywriters() {
+    public List<UserDto> getAllCopywriters() {
         return userRepository.findAllByRole(Role.COPYWRITER).stream()
                 .map(userEntityToDtoConverter::convert)
                 .toList();

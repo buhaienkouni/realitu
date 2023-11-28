@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import ua.kpi.realitu.auth.enums.Role;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +31,7 @@ public class UserEntity {
     private String password;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "last_name")
@@ -46,4 +48,8 @@ public class UserEntity {
 
     @Column(name = "telegram")
     private String telegram;
+
+    @OneToMany(mappedBy = "author")
+    public List<Article> articles;
+
 }

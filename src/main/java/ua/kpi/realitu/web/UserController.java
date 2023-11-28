@@ -36,7 +36,7 @@ public class UserController {
 
     private void usersModel(Model model, Authentication authentication) {
         UserEntity currentUser = userService.getUserByUsername(authentication.getName());
-        List<UserDto.ReadDto> copywriterDtoList = userService.getAllCopywriters();
+        List<UserDto> copywriterDtoList = userService.getAllCopywriters();
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("copywriters", copywriterDtoList);
@@ -45,7 +45,7 @@ public class UserController {
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('WRITE_USER')")
     public String users(Model model, Authentication authentication) {
-        model.addAttribute("userDto", new NewUserDto());
+        model.addAttribute("newUserDto", new NewUserDto());
         usersModel(model, authentication);
 
         return "users";
@@ -53,21 +53,23 @@ public class UserController {
 
     @PostMapping("/users/new")
     @PreAuthorize("hasAuthority('WRITE_USER')")
-    public String newUser(@Valid @ModelAttribute("userDto") NewUserDto userDto, BindingResult bindingResult, Model model, Authentication authentication) {
+    public String newUser(@Valid @ModelAttribute("newUserDto") NewUserDto newUserDto,
+                          BindingResult bindingResult, Model model, Authentication authentication) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("newUserDto", newUserDto);
             usersModel(model, authentication);
 
             return "users";
         }
 
         try {
-            userService.createUser(userDto);
+            userService.createUser(newUserDto);
 
         } catch (RuntimeException e) {
-            bindingResult.rejectValue("username", "usernameNotUnique", "User with username %s already exists".formatted(userDto.getUsername()));
-            model.addAttribute("userDto", userDto);
+            bindingResult.rejectValue("username", "usernameNotUnique",
+                    "User with username %s already exists".formatted(newUserDto.getUsername()));
+            model.addAttribute("newUserDto", newUserDto);
             usersModel(model, authentication);
 
             return "users";
@@ -83,25 +85,16 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/users/{id}")
+    @PostMapping("/users/update")
     @PreAuthorize("hasAuthority('WRITE_USER')")
-    public String userToEdit(@PathVariable("id") UUID id, Model model, Authentication authentication) {
-        UserDto.ReadDto userDto = userEntityToDtoConverter.convert(userService.getUserById(id));
-        UserEntity currentUser = userService.getUserByUsername(authentication.getName());
-
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("userDto", userDto);
-
-        return "newUser";
-    }
-
-    @PostMapping("/users/{id}/update")
-    @PreAuthorize("hasAuthority('WRITE_USER')")
-    public String updateUser(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult, Model model, Authentication authentication) {
+    public String updateUser(@Valid @ModelAttribute("userDto") UserDto userDto,
+                             BindingResult bindingResult, Model model, Authentication authentication) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("userDto", userDto);
-            return "newUser";
+            model.addAttribute("newUserDto", new NewUserDto());
+            usersModel(model, authentication);
+            return "users";
         }
         userService.updateUser(userDto);
 

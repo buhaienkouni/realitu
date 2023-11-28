@@ -2,11 +2,8 @@ package ua.kpi.realitu.web.model;
 
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import ua.kpi.realitu.auth.enums.Role;
-import ua.kpi.realitu.domain.UserEntity;
+import lombok.Data;
 
 import java.util.UUID;
 
@@ -14,6 +11,10 @@ import java.util.UUID;
 public class UserDto {
 
     private UUID id;
+
+    @NotBlank(message = "Field must be not blank")
+    @Size(max = 50, message = "Maximum size of field is 50 characters")
+    private String username;
 
     @NotBlank(message = "Field must be not blank")
     @Size(max = 50, message = "Maximum size of field is 50 characters")
@@ -31,14 +32,4 @@ public class UserDto {
 
     @Size(max = 50, message = "Maximum size of field is 50 characters")
     private String telegram;
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class ReadDto extends UserEntity {
-
-        private String username;
-
-        private Role role;
-    }
 }
