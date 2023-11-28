@@ -32,4 +32,5 @@ public class UserDto {
 
     @Size(max = 50, message = "Maximum size of field is 50 characters")
     private String telegram;
+
 }

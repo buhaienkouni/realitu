@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS articles (
     content          TEXT NOT NULL,
     creation_date    TIMESTAMP NOT NULL,
     category         VARCHAR(50) NOT NULL,
+    image_title      VARCHAR(255) UNIQUE NOT NULL,
     author_id        UUID NOT NULL,
     image_id         UUID,
 

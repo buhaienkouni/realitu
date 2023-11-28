@@ -40,6 +40,9 @@ public class Article {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(name = "image_title")
+    private String imageTitle;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     public UserEntity author;
