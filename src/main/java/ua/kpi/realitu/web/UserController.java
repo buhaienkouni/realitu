@@ -67,8 +67,7 @@ public class UserController {
             userService.createUser(newUserDto);
 
         } catch (RuntimeException e) {
-            bindingResult.rejectValue("username", "usernameNotUnique",
-                    "User with username %s already exists".formatted(newUserDto.getUsername()));
+            bindingResult.rejectValue("username", "usernameNotUnique", e.getMessage());
             model.addAttribute("newUserDto", newUserDto);
             usersModel(model, authentication);
 

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 import ua.kpi.realitu.domain.enums.Category;
 
 import java.time.LocalDate;
@@ -17,11 +18,11 @@ public class ArticleDto {
     private UUID id;
 
     @NotBlank(message = "Field must be not blank")
-    @Size(max = 200, message = "Maximum size of field is 200 characters")
+    @Size(max = 300, message = "Maximum size of field is 300 characters")
     private String title;
 
     @NotBlank(message = "Field must be not blank")
-    @Size(max = 60000, message = "Maximum size of field is 60.000 characters")
+    @Size(max = 100000, message = "Maximum size of field is 100.000 characters")
     private String content;
 
     private LocalDateTime creationDate;
@@ -29,6 +30,18 @@ public class ArticleDto {
     @NotNull
     private Category category;
 
-//TODO: Finnish DTO
+    @NotBlank(message = "Field must be not blank")
+    @Size(max = 300, message = "Maximum size of field is 300 characters")
+    private String imageTitle;
+
+    // Author
+    private String authorName;
+
+    private UUID authorId;
+
+    // Image
+    private UUID imageId;
+
+    private MultipartFile image;
 
 }
