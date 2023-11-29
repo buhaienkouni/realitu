@@ -14,7 +14,6 @@ import ua.kpi.realitu.service.converter.ArticleEntityToDtoConverter;
 import ua.kpi.realitu.web.model.ArticleDto;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,8 +69,7 @@ public class ArticleService {
     }
 
     public List<ArticleDto> getAllArticleDtoList() {
-        return articleRepository.findAll().stream()
-                .sorted(Comparator.comparing(Article::getCreationDate).reversed())
+        return articleRepository.findAllOrderByCreationDateDesc().stream()
                 .map(articleEntityToDtoConverter::convert)
                 .toList();
     }
@@ -82,25 +80,25 @@ public class ArticleService {
                 .orElse(null);
     }
 
-
     public List<ArticleDto> getArticleDtoListByCategory(Category category) {
-        return articleRepository.findAllByCategory(category).stream()
-                .sorted(Comparator.comparing(Article::getCreationDate).reversed())
-                .map(articleEntityToDtoConverter::convert)
-                .toList();
+        return Optional.ofNullable(getLatestArticle())
+                .map(latestArticle -> articleRepository.findAllByCategoryOrderByCreationDateDesc(category).stream()
+                        .filter(article -> !article.getId().equals(latestArticle.getId()))
+                        .map(articleEntityToDtoConverter::convert)
+                        .toList())
+                .orElseGet(() -> articleRepository.findAllByCategoryOrderByCreationDateDesc(category).stream()
+                        .map(articleEntityToDtoConverter::convert)
+                        .toList());
     }
 
-    // Change order in sql query
-    // Add minus latest where needed
+
     public List<ArticleDto> getArticleDtoListByUser(UserEntity principalUser) {
         if (principalUser.getRole() == Role.COPYWRITER) {
-            return articleRepository.findAllByAuthorId(principalUser.getId()).stream()
-                    .sorted(Comparator.comparing(Article::getCreationDate).reversed())
+            return articleRepository.findAllByAuthorIdOrderByCreationDateDesc(principalUser.getId()).stream()
                     .map(articleEntityToDtoConverter::convert)
                     .toList();
         } else if (principalUser.getRole() == Role.SUPER_ADMIN) {
-            return articleRepository.findAll().stream()
-                    .sorted(Comparator.comparing(Article::getCreationDate).reversed())
+            return articleRepository.findAllOrderByCreationDateDesc().stream()
                     .map(articleEntityToDtoConverter::convert)
                     .toList();
         }
