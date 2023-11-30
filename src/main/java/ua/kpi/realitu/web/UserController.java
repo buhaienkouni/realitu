@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ua.kpi.realitu.domain.UserEntity;
 import ua.kpi.realitu.service.UserService;
-import ua.kpi.realitu.service.converter.UserEntityToDtoConverter;
 import ua.kpi.realitu.web.model.NewUserDto;
 import ua.kpi.realitu.web.model.UserDto;
 
@@ -26,15 +25,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserEntityToDtoConverter userEntityToDtoConverter;
-
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
-    private void usersModel(Model model, Authentication authentication) {
+    private void copywritersAndCurrentUser(Model model, Authentication authentication) {
         UserEntity currentUser = userService.getUserByUsername(authentication.getName());
         List<UserDto> copywriterDtoList = userService.getAllCopywriters();
 
@@ -46,7 +42,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('WRITE_USER')")
     public String users(Model model, Authentication authentication) {
         model.addAttribute("newUserDto", new NewUserDto());
-        usersModel(model, authentication);
+        copywritersAndCurrentUser(model, authentication);
 
         return "users";
     }
@@ -58,7 +54,7 @@ public class UserController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("newUserDto", newUserDto);
-            usersModel(model, authentication);
+            copywritersAndCurrentUser(model, authentication);
 
             return "users";
         }
@@ -69,7 +65,7 @@ public class UserController {
         } catch (RuntimeException e) {
             bindingResult.rejectValue("username", "usernameNotUnique", e.getMessage());
             model.addAttribute("newUserDto", newUserDto);
-            usersModel(model, authentication);
+            copywritersAndCurrentUser(model, authentication);
 
             return "users";
         }
@@ -92,7 +88,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("userDto", userDto);
             model.addAttribute("newUserDto", new NewUserDto());
-            usersModel(model, authentication);
+            copywritersAndCurrentUser(model, authentication);
             return "users";
         }
         userService.updateUser(userDto);

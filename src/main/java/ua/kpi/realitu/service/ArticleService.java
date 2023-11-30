@@ -8,7 +8,6 @@ import ua.kpi.realitu.domain.UserEntity;
 import ua.kpi.realitu.domain.enums.Category;
 import ua.kpi.realitu.repository.ArticleRepository;
 import ua.kpi.realitu.repository.ImageRepository;
-import ua.kpi.realitu.repository.UserRepository;
 import ua.kpi.realitu.service.converter.ArticleDtoToEntityConverter;
 import ua.kpi.realitu.service.converter.ArticleEntityToDtoConverter;
 import ua.kpi.realitu.web.model.ArticleDto;
@@ -20,9 +19,6 @@ import java.util.UUID;
 
 @Service
 public class ArticleService {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -50,15 +46,20 @@ public class ArticleService {
         }
     }
 
-    public void updateArticle(ArticleDto articleDto) throws IOException {
+    public void updateArticle(ArticleDto articleDto, UserEntity principalUser) throws IOException {
         if (articleExists(articleDto.getTitle())) {
             throw new RuntimeException("Article with this title already exists");
         } else {
             Article article = getArticleById(articleDto.getId());
-            articleDtoToEntityConverter.update(articleDto, article);
-            articleRepository.save(article);
 
-            imageService.uploadImageAndSaveToArticle(articleDto.getImage(), article.getId());
+            if (article.getAuthor().getId() == principalUser.getId() || principalUser.getRole() == Role.SUPER_ADMIN) {
+                articleDtoToEntityConverter.update(articleDto, article);
+                articleRepository.save(article);
+
+                imageService.uploadImageAndSaveToArticle(articleDto.getImage(), article.getId());
+            } else {
+                throw new RuntimeException("You are not allowed to delete this article");
+            }
         }
     }
 
@@ -69,26 +70,24 @@ public class ArticleService {
     }
 
     public List<ArticleDto> getAllArticleDtoList() {
-        return articleRepository.findAllOrderByCreationDateDesc().stream()
+        return articleRepository.findAllByOrderByCreationDateDesc().stream()
                 .map(articleEntityToDtoConverter::convert)
                 .toList();
     }
 
-    public ArticleDto getLatestArticle() {
+    public ArticleDto getLatestArticleDto() {
         return articleRepository.findFirstByOrderByCreationDateDesc()
                 .map(articleEntityToDtoConverter::convert)
                 .orElse(null);
     }
 
     public List<ArticleDto> getArticleDtoListByCategory(Category category) {
-        return Optional.ofNullable(getLatestArticle())
+        return Optional.ofNullable(getLatestArticleDto())
                 .map(latestArticle -> articleRepository.findAllByCategoryOrderByCreationDateDesc(category).stream()
                         .filter(article -> !article.getId().equals(latestArticle.getId()))
                         .map(articleEntityToDtoConverter::convert)
                         .toList())
-                .orElseGet(() -> articleRepository.findAllByCategoryOrderByCreationDateDesc(category).stream()
-                        .map(articleEntityToDtoConverter::convert)
-                        .toList());
+                .orElseGet(List::of);
     }
 
 
@@ -98,7 +97,7 @@ public class ArticleService {
                     .map(articleEntityToDtoConverter::convert)
                     .toList();
         } else if (principalUser.getRole() == Role.SUPER_ADMIN) {
-            return articleRepository.findAllOrderByCreationDateDesc().stream()
+            return articleRepository.findAllByOrderByCreationDateDesc().stream()
                     .map(articleEntityToDtoConverter::convert)
                     .toList();
         }
@@ -121,7 +120,7 @@ public class ArticleService {
         return articleRepository.findByTitle(title.strip()).isPresent();
     }
 
-    public Article getArticleById(UUID id) {
+    private Article getArticleById(UUID id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find article with id %s.".formatted(id)));
     }

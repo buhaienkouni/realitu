@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 import ua.kpi.realitu.domain.enums.Category;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -33,6 +34,13 @@ public class ArticleDto {
     @NotBlank(message = "Field must be not blank")
     @Size(max = 300, message = "Maximum size of field is 300 characters")
     private String imageTitle;
+
+    // Donations
+    private String cardNumber;
+
+    private String cardOwner;
+
+    private String monoLink;
 
     // Author
     private String authorName;

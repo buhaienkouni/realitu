@@ -7,10 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import ua.kpi.realitu.domain.enums.Category;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +23,6 @@ public class Article {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
     @Column(name = "title")
@@ -42,6 +41,15 @@ public class Article {
 
     @Column(name = "image_title")
     private String imageTitle;
+
+    @Column(name = "card_number")
+    private String cardNumber;
+
+    @Column(name = "card_owner")
+    private String cardOwner;
+
+    @Column(name = "mono_link")
+    private String monoLink;
 
     @ManyToOne
     @JoinColumn(name = "author_id")

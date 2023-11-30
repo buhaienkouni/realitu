@@ -1,6 +1,9 @@
 package ua.kpi.realitu.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +24,9 @@ public class ImageService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Value("classpath:static/images/default-picture.jpg")
+    private Resource defaultImage;
 
     @Transactional
     public void uploadImageAndSaveToArticle(MultipartFile image, UUID articleId) throws IOException {
@@ -47,6 +53,17 @@ public class ImageService {
     public Optional<byte[]> getImageDataByArticleId(UUID articleId) {
         return Optional.ofNullable(findArticleById(articleId).getImage())
                 .map(Image::getImageData);
+    }
+
+    public byte[] getArticleImageByArticleId(UUID articleId) {
+
+        return getImageDataByArticleId(articleId).orElseGet(() -> {
+            try {
+                return defaultImage.getInputStream().readAllBytes();
+            } catch (IOException e) {
+                throw new RuntimeException(HttpStatus.NOT_FOUND.getReasonPhrase(), e);
+            }
+        });
     }
 
     private Image saveImage(MultipartFile image) throws IOException {

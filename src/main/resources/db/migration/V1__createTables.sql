@@ -1,6 +1,6 @@
 -- Create table for user entities
 CREATE TABLE IF NOT EXISTS user_entities (
-    id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id           UUID DEFAULT random_uuid() PRIMARY KEY,
     username     VARCHAR(50) UNIQUE NOT NULL,
     password     VARCHAR(255) NOT NULL,
     role         VARCHAR(50) NOT NULL DEFAULT 'COPYWRITER',
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS user_entities (
 
 -- Create table for images
 CREATE TABLE IF NOT EXISTS images (
-    id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id           UUID DEFAULT random_uuid() PRIMARY KEY,
     image_name   VARCHAR(255) NOT NULL,
     image_type   VARCHAR(255) NOT NULL,
     image_data   BYTEA NOT NULL
@@ -21,12 +21,15 @@ CREATE TABLE IF NOT EXISTS images (
 
 -- Create table for articles
 CREATE TABLE IF NOT EXISTS articles (
-    id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id               UUID DEFAULT random_uuid() PRIMARY KEY,
     title            VARCHAR(300) UNIQUE NOT NULL,
     content          TEXT NOT NULL,
     creation_date    TIMESTAMP NOT NULL,
     category         VARCHAR(50) NOT NULL,
     image_title      VARCHAR(255) UNIQUE NOT NULL,
+    card_number      VARCHAR(50),
+    card_owner       VARCHAR(50),
+    mono_link        VARCHAR(400),
     author_id        UUID NOT NULL,
     image_id         UUID,
 

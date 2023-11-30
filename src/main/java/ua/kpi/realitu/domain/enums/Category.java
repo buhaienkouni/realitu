@@ -1,4 +1,7 @@
 package ua.kpi.realitu.domain.enums;
 
-public class Category {
+public enum Category {
+    HISTORY,
+    WAR,
+    POLITICS
 }

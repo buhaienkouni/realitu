@@ -3,10 +3,10 @@ package ua.kpi.realitu.service.converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.kpi.realitu.domain.Article;
+import ua.kpi.realitu.domain.enums.Category;
 import ua.kpi.realitu.repository.UserRepository;
 import ua.kpi.realitu.web.model.ArticleDto;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component
@@ -23,6 +23,12 @@ public class ArticleEntityToDtoConverter {
         articleDto.setContent(articleEntity.getContent());
         articleDto.setCreationDate(articleEntity.getCreationDate());
         articleDto.setCategory(articleEntity.getCategory());
+
+        if (articleEntity.getCategory() == Category.HISTORY) {
+            articleDto.setCardNumber(articleEntity.getCardNumber());
+            articleDto.setCardOwner(articleEntity.getCardOwner());
+            articleDto.setMonoLink(articleEntity.getMonoLink());
+        }
         Optional.ofNullable(articleEntity.getImage())
                 .ifPresent(image -> {
                     articleDto.setImageId(image.getId());
