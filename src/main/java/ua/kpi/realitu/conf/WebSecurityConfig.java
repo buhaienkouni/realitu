@@ -9,14 +9,9 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -48,11 +43,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers(mvc.pattern("/home")).permitAll()
+                .requestMatchers(mvc.pattern("/home/**")).permitAll()
                 .requestMatchers(mvc.pattern("/")).permitAll()
                 .requestMatchers(mvc.pattern("/article/**")).permitAll()
                 .requestMatchers(mvc.pattern("/image/**")).permitAll()
                 .requestMatchers(mvc.pattern("/style/**")).permitAll()
+                .requestMatchers(mvc.pattern("/images/**")).permitAll()
                 .anyRequest().authenticated()
         );
 
@@ -65,7 +61,11 @@ public class WebSecurityConfig {
                 .permitAll()
         );
 
-        http.logout(LogoutConfigurer::permitAll);
+        http.logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/home")
+                .permitAll()
+        );
 
         return http.build();
     }
