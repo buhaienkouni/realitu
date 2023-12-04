@@ -1,10 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
 
+<head th:replace="~{fragments/head :: head('Home')}">
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar('home', ${currentUser})}"></div>
+
+
+<div class="align-self-center">
+    <div class="container container-margin py-4 px-5 white-background">
+        <div class="row">
+            <div class="col">
+                <div th:if="${latestWarArticle != null}">
+                    <h1 class="mb-4 mx-2">WAR: News from Front-Line</h1>
+
+                    <div th:object="${latestWarArticle}" class="mb-3">
+                        <a th:href="@{'/home/article/' + *{titleForLink} + '/' + *{id}}"
+                           class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                            <div class="container">
+                                <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
+                                <p class="fs-1" th:text="*{title}"></p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="row mb-0" th:if="${!#lists.isEmpty(warArticles3)}">
+                        <div th:each="warArticle : ${warArticles3}" class="col">
+                            <div th:object="${warArticle}">
+                                <a th:href="@{'/home/article/' + *{titleForLink} + '/' + *{id}}"
+                                   class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                                    <div class="container-md">
+                                        <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
+                                        <p class="fs-5" th:text="*{title}"></p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-start mb-4 mx-2">
+                        <a href="/home/war"
+                           class="link-secondary link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">
+                            View more articles on topic: WAR
+                        </a>
+                    </div>
+
+                </div>
+
+                <div th:if="${latestPoliticArticle != null}">
+                    <h1 class="mb-4 mx-2">POLITIC: Latest intrigues</h1>
+
+                    <div th:object="${latestPoliticArticle}" class="mb-3">
+                        <a th:href="@{'/home/article/' + *{titleForLink} + '/' + *{id}}"
+                           class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                            <div class="container">
+                                <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
+                                <p class="fs-1" th:text="*{title}"></p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="row mb-0" th:if="${!#lists.isEmpty(politicArticles3)}">
+                        <div th:each="politicArticle : ${politicArticles3}" class="col">
+                            <div th:object="${politicArticle}">
+                                <a th:href="@{'/home/article/' + *{titleForLink} + '/' + *{id}}"
+                                   class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                                    <div class="container-md">
+                                        <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
+                                        <p class="fs-5" th:text="*{title}"></p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-start mb-4 mx-2">
+                        <a href="/home/war"
+                           class="link-secondary link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">
+                            View more articles on topic: POLITIC
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="row mb-4 d-block d-xl-none d-xxl-none" th:if="${!#lists.isEmpty(histories3)}">
+                    <h2 class="mb-2 mx-2">Histories</h2>
+                    <div class="col pt-4 px-4 gray-background">
+                        <div th:each="history : ${histories3}" th:object="${history}" class="row">
+                            <div class="container-md">
+                                <a th:href="@{'/histories/article/' + *{titleForLink} + '/' + *{id}}"
+                                   class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                                    <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
+                                    <p class="fs-5 mb-2" th:text="*{title}"></p>
+                                    <button th:if="*{monoLink == null}"
+                                            class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-4"
+                                            type="button">
+                                        Donate
+                                    </button>
+                                </a>
+                                <a th:if="*{monoLink != null}" th:href="*{monoLink}"
+                                   class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-4"
+                                   role="button">
+                                    Mono Banka
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div th:if="${!#lists.isEmpty(histories)}" class="col-3 d-none d-xl-block d-xxl-block">
+
+                <h2 class="mb-2">Histories</h2>
+
+                <div class="row gray-background mb-3 pt-4 d-flex justify-content-center">
+                    <div class="col">
+                        <div th:each="history : ${histories}" class="row">
+                            <div th:object="${history}">
+                                <div class="container-md">
+                                    <a th:href="@{'/histories/article/' + *{titleForLink} + '/' + *{id}}"
+                                       class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-0-hover">
+                                        <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
+                                        <p class="fs-5 mb-2" th:text="*{title}"></p>
+                                        <button th:if="*{monoLink == null}"
+                                                class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-4"
+                                                type="button">
+                                            Donate
+                                        </button>
+                                    </a>
+                                    <a th:if="*{monoLink != null}" th:href="*{monoLink}"
+                                       class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-4"
+                                       role="button">
+                                        Mono Banka
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/scripts :: scripts()}"></div>
 </body>
+
 </html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{fragments/head :: head('Copywriters')}">
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar('users', ${currentUser})}"></div>
+
+<div class="align-self-center">
+    <div class="container container-margin py-4 px-5 white-background">
+
+        <form novalidate th:action="@{/users/update}" id="newCopywriter" th:object="${userDto}" method="post">
+            <h1 class="mb-3" th:text="'Edit ' + *{username}">Edit Copywriter</h1>
+            <input type="hidden" th:field="*{username}">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label for="lastName" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder=""
+                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
+                           th:field="*{lastName}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}"
+                         th:errors="*{lastName}"></div>
+                </div>
+                <div class="col-5">
+                    <label for="firstName" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder=""
+                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
+                           th:field="*{firstName}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}"
+                         th:errors="*{firstName}"></div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <label for="telegram" class="form-label">Telegram</label>
+                    <input type="text" class="form-control" id="telegram" placeholder="@andriy228"
+                           th:classappend="${#fields.hasErrors('telegram')} ? 'is-invalid' : ''"
+                           th:field="*{telegram}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('telegram')}"
+                         th:errors="*{telegram}"></div>
+                </div>
+                <div class="col">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" placeholder="andriy@gmail.com"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                           th:field="*{email}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}"
+                         th:errors="*{email}"></div>
+                </div>
+                <div class="col">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone" placeholder="+380 XX XXX XX XX"
+                           th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                           th:field="*{phone}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}"
+                         th:errors="*{phone}"></div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-3" type="submit">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/users" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mb-4">< Back to Copywriters</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/scripts :: scripts()}"></div>
+</body>
+
+</html>
