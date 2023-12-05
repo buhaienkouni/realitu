@@ -48,16 +48,16 @@ public class ArticleController {
     public String homeWithArticles(Model model, Authentication authentication) {
 
         ArticleDto latestWarArticle = articleService.getLatestArticleDtoNotHistories(Category.WAR);
-        List<ArticleDto> warArticles3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
-                articleService.getArticleDtoListByCategory(Category.WAR), List.of(latestWarArticle), 3);
+        List<ArticleDto> warArticles3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
+                articleService.getArticleDtoListByCategory(Category.WAR), latestWarArticle, 3);
 
         ArticleDto latestPoliticArticle = articleService.getLatestArticleDtoNotHistories(Category.POLITIC);
-        List<ArticleDto> politicArticles3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
-                articleService.getArticleDtoListByCategory(Category.POLITIC), List.of(latestWarArticle), 3);
+        List<ArticleDto> politicArticles3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
+                articleService.getArticleDtoListByCategory(Category.POLITIC), latestWarArticle, 3);
 
-        List<ArticleDto> histories5 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> histories5 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getArticleDtoListByCategory(Category.HISTORY), null, 5);
-        List<ArticleDto> histories3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> histories3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getArticleDtoListByCategory(Category.HISTORY), null, 3);
 
         currentUser(model, authentication);
@@ -101,13 +101,13 @@ public class ArticleController {
     @GetMapping("/home/article/{title}/{id}")
     public String currentArticle(@PathVariable("id") UUID id, Model model, Authentication authentication) {
         ArticleDto thisArticle = articleService.getArticleDtoById(id);
-        List<ArticleDto> histories5 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> histories5 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getArticleDtoListByCategory(Category.HISTORY), null, 5);
 
-        List<ArticleDto> histories3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> histories3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getArticleDtoListByCategory(Category.HISTORY), null, 3);
 
-        List<ArticleDto> recommendations3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> recommendations3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getArticleDtoListButNotCurrentAndNotHistories(thisArticle), null, 3);
 
         currentUser(model, authentication);
@@ -122,13 +122,13 @@ public class ArticleController {
     @GetMapping("/histories/article/{title}/{id}")
     public String currentArticleHistory(@PathVariable("id") UUID id, Model model, Authentication authentication) {
         ArticleDto thisHistoryArticle = articleService.getArticleDtoById(id);
-        List<ArticleDto> histories5 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> histories5 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getHistoryArticleDtoListButNotCurrent(thisHistoryArticle), null, 5);
 
-        List<ArticleDto> histories3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> histories3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getHistoryArticleDtoListButNotCurrent(thisHistoryArticle), null, 5);
 
-        List<ArticleDto> recommendations3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+        List<ArticleDto> recommendations3 = articleService.getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
                 articleService.getArticleDtoListButNotCurrentAndNotHistories(thisHistoryArticle), null, 3);
 
         currentUser(model, authentication);

@@ -13,6 +13,12 @@
     <div class="container container-margin py-4 px-5 white-background">
         <div class="row">
             <div class="col">
+
+                <div th:if="${latestWarArticle == null && latestPoliticArticle == null}">
+                    <h1 class="mb-3">News</h1>
+                    <p class="text-muted fs-4">We have not written any articles yet...</p>
+                </div>
+
                 <div th:if="${latestWarArticle != null}">
                     <h1 class="mb-4 mx-2">WAR: News from Front-Line</h1>
 

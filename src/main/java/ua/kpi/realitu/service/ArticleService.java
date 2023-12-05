@@ -66,13 +66,13 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleDto> getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
-            List<ArticleDto> listToSort, List<ArticleDto> usedArticles, int amount) {
+    public List<ArticleDto> getSomeAmountOfArticlesDtoListAndRemoveUsedArticle(
+            List<ArticleDto> listToSort, ArticleDto usedArticle, int amount) {
 
         List<ArticleDto> mutableListToSort = new ArrayList<>(listToSort);
 
-        if (usedArticles != null) {
-            mutableListToSort.removeIf(usedArticles::contains);
+        if (usedArticle != null) {
+            mutableListToSort.removeIf(article -> article.equals(usedArticle));
         }
 
         if (mutableListToSort.size() <= amount) {
