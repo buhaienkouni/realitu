@@ -28,6 +28,8 @@ public class ArticleDto {
     @Size(max = 100000, message = "Maximum size of field is 100.000 characters")
     private String content;
 
+    private String previewContent;
+
     private LocalDateTime creationDate;
 
     private String creationDateString;

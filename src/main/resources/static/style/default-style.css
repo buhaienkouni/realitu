@@ -31,6 +31,10 @@ body {
     margin-top: 85px;
 }
 
+.container {
+    overflow-wrap: break-word;
+}
+
 .container img,
 .container-lg img,
 .container-xl img,

@@ -20,14 +20,14 @@ public class ArticleDtoToEntityConverter {
     public Article create(ArticleDto articleDto, UserEntity principalUser) {
         Article articleEntity = new Article();
 
-        articleEntity.setTitle(articleDto.getTitle().strip());
-        articleEntity.setContent(articleDto.getContent().strip());
+        articleEntity.setTitle(articleDto.getTitle().strip().trim());
+        articleEntity.setContent(articleDto.getContent());
         articleEntity.setCreationDate(LocalDateTime.now());
         articleEntity.setCategory(articleDto.getCategory());
-        articleEntity.setImageTitle(articleDto.getImageTitle());
-        articleEntity.setCardNumber(articleDto.getCardNumber());
-        articleEntity.setCardOwner(articleDto.getCardOwner());
-        articleEntity.setMonoLink(articleDto.getMonoLink());
+        articleEntity.setImageTitle(articleDto.getImageTitle().strip().trim());
+        articleEntity.setCardNumber(articleDto.getCardNumber().strip().trim());
+        articleEntity.setCardOwner(articleDto.getCardOwner().strip().trim());
+        articleEntity.setMonoLink(articleDto.getMonoLink().strip().trim());
         articleEntity.setAuthor(principalUser);
 
         return articleEntity;
@@ -35,13 +35,13 @@ public class ArticleDtoToEntityConverter {
 
     public Article update(ArticleDto articleDto, Article articleEntity) {
 
-        articleEntity.setTitle(articleDto.getTitle().strip());
-        articleEntity.setContent(articleDto.getContent().strip());
+        articleEntity.setTitle(articleDto.getTitle().strip().trim());
+        articleEntity.setContent(articleDto.getContent());
         articleEntity.setCategory(articleDto.getCategory());
-        articleEntity.setImageTitle(articleDto.getImageTitle());
-        articleEntity.setCardNumber(articleDto.getCardNumber());
-        articleEntity.setCardOwner(articleDto.getCardOwner());
-        articleEntity.setMonoLink(articleDto.getMonoLink());
+        articleEntity.setImageTitle(articleDto.getImageTitle().strip().trim());
+        articleEntity.setCardNumber(articleDto.getCardNumber().strip().trim());
+        articleEntity.setCardOwner(articleDto.getCardOwner().strip().trim());
+        articleEntity.setMonoLink(articleDto.getMonoLink().strip().trim());
 
         return articleEntity;
     }

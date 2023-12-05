@@ -18,7 +18,8 @@ public class ArticleEntityToDtoConverter {
         articleDto.setId(articleEntity.getId());
         articleDto.setTitle(articleEntity.getTitle());
         articleDto.setTitleForLink(convertTitleForLink(articleEntity.getTitle()));
-        articleDto.setContent(articleEntity.getContent());
+        articleDto.setContent(formatContent(articleEntity.getContent()));
+        articleDto.setPreviewContent(createPreview(articleEntity.getContent(), articleEntity.getTitle()));
         articleDto.setCreationDateString(convertDataToString(articleEntity.getCreationDate()));
         articleDto.setCategory(articleEntity.getCategory());
 
@@ -79,5 +80,43 @@ public class ArticleEntityToDtoConverter {
             return "Invalid card number format";
         }
         return cardNumber.replaceAll("(.{4})", "$1 ").trim();
+    }
+
+    public String createPreview(String content, String title) {
+        int titleLength = title.length();
+
+        int endIndex;
+        if (titleLength <= 65) {
+            endIndex = Math.min(content.length(), 340);
+            if (endIndex == 340) {
+                while (endIndex > 330 && isSpaceOrPunctuation(content.charAt(endIndex - 1))) {
+                    endIndex--;
+                }
+            }
+        } else {
+            endIndex = Math.min(content.length(), 230);
+            if (endIndex == 230) {
+                while (endIndex > 220 && isSpaceOrPunctuation(content.charAt(endIndex - 1))) {
+                    endIndex--;
+                }
+            }
+        }
+
+        if (endIndex > 0 && isSpaceOrPunctuation(content.charAt(endIndex - 1))) {
+            endIndex--;
+        }
+
+        return content.substring(0, endIndex) + "...";
+    }
+
+    private boolean isSpaceOrPunctuation(char c) {
+        return c == ' ' || c == '.' || c == ',';
+    }
+
+    public String formatContent(String content) {
+        content = content.replaceAll(" ", "&nbsp;");
+        content = content.replaceAll("\n", "<br>");
+
+        return content;
     }
 }

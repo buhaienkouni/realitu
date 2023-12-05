@@ -27,8 +27,8 @@ public class UserService {
     private UserEntityToDtoConverter userEntityToDtoConverter;
 
     public void createUser(NewUserDto userDto) {
-        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-            throw new RuntimeException("User with username %s already exists".formatted(userDto.getUsername()));
+        if (userRepository.findByUsername('@' + userDto.getUsername().strip().trim()).isPresent()) {
+            throw new RuntimeException("User with username @%s already exists".formatted(userDto.getUsername()));
         } else {
             UserEntity newUser = userDtoToEntityConverter.create(userDto);
             userRepository.save(newUser);

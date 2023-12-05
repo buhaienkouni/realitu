@@ -16,7 +16,7 @@
                 <div th:object="${article}" class="mb-3">
                     <div class="container">
                         <h1 class="mb-4" th:text="*{title}">This Title</h1>
-                        <img th:src="@{'image/' + *{id}}" class="mb-1" alt="Article Image"/>
+                        <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
                         <p class="mb-4 fst-italic" th:text="*{imageTitle}">Image Title</p>
                         <p class="mb-4 fs-5" th:text="*{content}">Content</p>
                         <div class="row mb-4">
