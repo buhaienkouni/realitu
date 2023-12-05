@@ -18,7 +18,7 @@
                         <h1 class="mb-4" th:text="*{title}">This Title</h1>
                         <img th:src="@{'image/' + *{id}}" class="mb-2" alt="Article Image"/>
                         <p class="mb-4 fst-italic" th:text="*{imageTitle}">Image Title</p>
-                        <p class="mb-4 fs-5" th:text="*{content}">Content</p>
+                        <p class="mb-4 fs-5" th:utext="*{content}">Content</p>
                         <div class="row mb-4">
                             <div class="col-6 text-start">
                                 <p class="fst-italic" th:text="'Written by: ' + *{authorName}"></p>
