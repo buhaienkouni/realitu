@@ -60,4 +60,8 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find user with id %s.".formatted(id)));
     }
+
+    public UserDto getUserDtoById(UUID id) {
+        return userEntityToDtoConverter.convert(getUserById(id));
+    }
 }

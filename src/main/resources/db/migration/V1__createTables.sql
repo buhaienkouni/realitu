@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS user_entities (
     first_name   VARCHAR(50) NOT NULL,
     email        VARCHAR(50),
     phone        VARCHAR(50),
-    telegram     VARCHAR(50)
+    telegram     VARCHAR(50) NOT NULL
 );
 
 -- Create table for images
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS articles (
     content          TEXT NOT NULL,
     creation_date    TIMESTAMP NOT NULL,
     category         VARCHAR(50) NOT NULL,
-    image_title      VARCHAR(255) UNIQUE NOT NULL,
+    image_title      VARCHAR(255),
     card_number      VARCHAR(50),
     card_owner       VARCHAR(50),
     mono_link        VARCHAR(400),
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS articles (
 );
 
 -- Insert data into the user_entities table with bcrypt-ed passwords
-INSERT INTO user_entities (username, password, role, first_name, last_name)
-VALUES ('superadmin', '$2a$12$fqKO8tGiz2HXe4kGXb0ZH.K5G56JH2M5Ub9maSZk51hIavM2njriu', 'SUPER_ADMIN', 'Oleh', 'Buhaienko');
+INSERT INTO user_entities (username, password, role, first_name, last_name, telegram)
+VALUES ('@superadmin', '$2a$12$fqKO8tGiz2HXe4kGXb0ZH.K5G56JH2M5Ub9maSZk51hIavM2njriu', 'SUPER_ADMIN', 'Oleh', 'Buhaienko', '@olehbuhaienko');
 
-INSERT INTO user_entities (username, password, role, first_name, last_name)
-VALUES ('copywriter', '$2a$12$kbR5rrQESgnrIUfm5CFnM.x9hX5aXrd..xrKu0F5UWybPRr.lkp.u', 'COPYWRITER', 'Copy', 'Writer');
+INSERT INTO user_entities (username, password, role, first_name, last_name, telegram)
+VALUES ('@copywriter', '$2a$12$kbR5rrQESgnrIUfm5CFnM.x9hX5aXrd..xrKu0F5UWybPRr.lkp.u', 'COPYWRITER', 'Copy', 'Writer', '@copywriter');

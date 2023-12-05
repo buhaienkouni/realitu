@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.kpi.realitu.auth.enums.Role;
 import ua.kpi.realitu.domain.Article;
+import ua.kpi.realitu.domain.Image;
 import ua.kpi.realitu.domain.UserEntity;
 import ua.kpi.realitu.domain.enums.Category;
 import ua.kpi.realitu.repository.ArticleRepository;
@@ -13,6 +14,7 @@ import ua.kpi.realitu.service.converter.ArticleEntityToDtoConverter;
 import ua.kpi.realitu.web.model.ArticleDto;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +38,7 @@ public class ArticleService {
     private ArticleEntityToDtoConverter articleEntityToDtoConverter;
 
     public void createArticle(ArticleDto articleDto, UserEntity principalUser) throws IOException {
-        if (articleExists(articleDto.getTitle())) {
+        if (articleRepository.findByTitle(articleDto.getTitle().strip()).isPresent()) {
             throw new RuntimeException("Article with this title already exists");
         } else {
             Article article = articleDtoToEntityConverter.create(articleDto, principalUser);
@@ -47,7 +49,8 @@ public class ArticleService {
     }
 
     public void updateArticle(ArticleDto articleDto, UserEntity principalUser) throws IOException {
-        if (articleExists(articleDto.getTitle())) {
+        if (articleRepository.findByTitle(articleDto.getTitle().strip()).isPresent()
+                && !articleRepository.findByTitle(articleDto.getTitle().strip()).get().getId().equals(articleDto.getId())) {
             throw new RuntimeException("Article with this title already exists");
         } else {
             Article article = getArticleById(articleDto.getId());
@@ -63,10 +66,34 @@ public class ArticleService {
         }
     }
 
+    public List<ArticleDto> getSomeAmountOfArticlesDtoListAndRemoveUsedArticles(
+            List<ArticleDto> listToSort, List<ArticleDto> usedArticles, int amount) {
+
+        List<ArticleDto> mutableListToSort = new ArrayList<>(listToSort);
+
+        if (usedArticles != null) {
+            mutableListToSort.removeIf(usedArticles::contains);
+        }
+
+        if (mutableListToSort.size() <= amount) {
+            return mutableListToSort;
+        }
+
+        return mutableListToSort.stream()
+                .limit(amount)
+                .toList();
+    }
+
     public ArticleDto getArticleDtoById(UUID id) {
         Article article = getArticleById(id);
 
         return articleEntityToDtoConverter.convert(article);
+    }
+
+    public ArticleDto getArticleDtoByIdForEditing(UUID id) {
+        Article article = getArticleById(id);
+
+        return articleEntityToDtoConverter.convertForEditing(article);
     }
 
     public List<ArticleDto> getAllArticleDtoList() {
@@ -75,21 +102,46 @@ public class ArticleService {
                 .toList();
     }
 
-    public ArticleDto getLatestArticleDto() {
-        return articleRepository.findFirstByOrderByCreationDateDesc()
+    public ArticleDto getLatestArticleDtoNotHistories(Category category) {
+        return articleRepository.findAllByOrderByCreationDateDesc().stream()
+                .filter(article -> article.getCategory() != Category.HISTORY)
+                .filter(article -> article.getCategory() == category)
+                .findFirst()
                 .map(articleEntityToDtoConverter::convert)
                 .orElse(null);
     }
 
     public List<ArticleDto> getArticleDtoListByCategory(Category category) {
-        return Optional.ofNullable(getLatestArticleDto())
-                .map(latestArticle -> articleRepository.findAllByCategoryOrderByCreationDateDesc(category).stream()
-                        .filter(article -> !article.getId().equals(latestArticle.getId()))
-                        .map(articleEntityToDtoConverter::convert)
-                        .toList())
-                .orElseGet(List::of);
+        if (category == Category.HISTORY) {
+            return Optional.ofNullable(articleRepository.findAllByCategoryOrderByCreationDateDesc(category))
+                    .map(articles -> articles.stream()
+                            .map(articleEntityToDtoConverter::convert)
+                            .toList())
+                    .orElseGet(List::of);
+        } else {
+            return Optional.ofNullable(getLatestArticleDtoNotHistories(category))
+                    .map(latestArticle -> articleRepository.findAllByCategoryOrderByCreationDateDesc(category).stream()
+                            .filter(article -> !article.getId().equals(latestArticle.getId()))
+                            .map(articleEntityToDtoConverter::convert)
+                            .toList())
+                    .orElseGet(List::of);
+        }
     }
 
+    public List<ArticleDto> getArticleDtoListButNotCurrentAndNotHistories(ArticleDto articleDto) {
+        return articleRepository.findAllByOrderByCreationDateDesc().stream()
+                        .filter(article -> !article.getId().equals(articleDto.getId()))
+                        .filter(article -> !article.getCategory().equals(Category.HISTORY))
+                        .map(articleEntityToDtoConverter::convert)
+                        .toList();
+    }
+
+    public List<ArticleDto> getHistoryArticleDtoListButNotCurrent(ArticleDto articleDto) {
+        return articleRepository.findAllByCategoryOrderByCreationDateDesc(Category.HISTORY).stream()
+                .filter(article -> !article.getId().equals(articleDto.getId()))
+                .map(articleEntityToDtoConverter::convert)
+                .toList();
+    }
 
     public List<ArticleDto> getArticleDtoListByUser(UserEntity principalUser) {
         if (principalUser.getRole() == Role.COPYWRITER) {
@@ -108,16 +160,15 @@ public class ArticleService {
         Article article = getArticleById(id);
 
         if (article.getAuthor().getId() == principalUser.getId() || principalUser.getRole() == Role.SUPER_ADMIN) {
-            Optional.ofNullable(article.getImage())
-                    .ifPresent(imageRepository::delete);
+            Image image = article.getImage();
             articleRepository.delete(article);
+
+            if (image != null) {
+                imageRepository.delete(image);
+            }
         } else {
             throw new RuntimeException("You are not allowed to delete this article");
         }
-    }
-
-    public Boolean articleExists(String title) {
-        return articleRepository.findByTitle(title.strip()).isPresent();
     }
 
     private Article getArticleById(UUID id) {

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-// TODO: Check if this is correct
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
 
     List<Article> findAllByAuthorIdOrderByCreationDateDesc(UUID authorId);
@@ -18,6 +17,4 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     List<Article> findAllByOrderByCreationDateDesc();
 
     Optional<Article> findByTitle(String title);
-
-    Optional<Article> findFirstByOrderByCreationDateDesc();
 }

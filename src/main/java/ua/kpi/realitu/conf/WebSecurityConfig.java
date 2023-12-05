@@ -45,7 +45,10 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((requests) -> requests
                 .requestMatchers(mvc.pattern("/home/**")).permitAll()
                 .requestMatchers(mvc.pattern("/")).permitAll()
-                .requestMatchers(mvc.pattern("/article/**")).permitAll()
+                .requestMatchers(mvc.pattern("/home/article/**")).permitAll()
+                .requestMatchers(mvc.pattern("/histories/**")).permitAll()
+                .requestMatchers(mvc.pattern("/about")).permitAll()
+                .requestMatchers(mvc.pattern("/suggest/**")).permitAll()
                 .requestMatchers(mvc.pattern("/image/**")).permitAll()
                 .requestMatchers(mvc.pattern("/style/**")).permitAll()
                 .requestMatchers(mvc.pattern("/images/**")).permitAll()
@@ -65,6 +68,11 @@ public class WebSecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/home")
                 .permitAll()
+        );
+
+        http.rememberMe((rememberMe) -> rememberMe
+                //TODO: add key if needed and fix it
+                .tokenValiditySeconds(86400)
         );
 
         return http.build();

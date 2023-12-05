@@ -12,7 +12,6 @@ public class UserDto {
 
     private UUID id;
 
-    @NotBlank(message = "Field must be not blank")
     @Size(max = 50, message = "Maximum size of field is 50 characters")
     private String username;
 
@@ -30,6 +29,7 @@ public class UserDto {
     @Size(max = 50, message = "Maximum size of field is 50 characters")
     private String phone;
 
+    @NotBlank(message = "Field must be not blank")
     @Size(max = 50, message = "Maximum size of field is 50 characters")
     private String telegram;
 

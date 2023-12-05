@@ -1,4 +1,59 @@
 body {
-    background: rgb(72,81,186);
-    background: linear-gradient(90deg, rgba(72,81,186,1) 0%, rgba(42,76,139,1) 72%);
+    background: #8495bb;
+}
+
+.white-background {
+    background: white;
+}
+
+.gray-background {
+    background: #D8D8D8;
+}
+
+.dark-background {
+    background: #1b3c82;
+}
+
+.link-active-tab {
+    color: #768db9;
+    font-weight: bold;
+}
+
+.link-tab {
+    color: #dee4ee;
+}
+
+.active-tab {
+    background-color: #060f20;
+}
+
+.container-margin {
+    margin-top: 85px;
+}
+
+.container img,
+.container-lg img,
+.container-xl img,
+.container-xxl img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-height: 500px;
+    min-height: 300px;
+}
+
+.container-md img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-height: 200px;
+    min-height: 200px;
+}
+
+.container-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-height: 150px;
+    min-height: 100px;
 }

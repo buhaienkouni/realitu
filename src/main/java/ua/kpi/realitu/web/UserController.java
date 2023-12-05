@@ -35,7 +35,8 @@ public class UserController {
         List<UserDto> copywriterDtoList = userService.getAllCopywriters();
 
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("copywriters", copywriterDtoList);
+        model.addAttribute("userDtoList", copywriterDtoList);
+        model.addAttribute("usersListIsEmpty", copywriterDtoList.isEmpty());
     }
 
     @GetMapping("/users")
@@ -80,16 +81,30 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('WRITE_USER')")
+    public String currentUserToChange(@PathVariable("id") UUID id, Model model, Authentication authentication) {
+        UserEntity currentUser = userService.getUserByUsername(authentication.getName());
+        UserDto userDto = userService.getUserDtoById(id);
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userDto", userDto);
+
+        return "editUser";
+    }
+
     @PostMapping("/users/update")
     @PreAuthorize("hasAuthority('WRITE_USER')")
     public String updateUser(@Valid @ModelAttribute("userDto") UserDto userDto,
                              BindingResult bindingResult, Model model, Authentication authentication) {
 
+        UserEntity currentUser = userService.getUserByUsername(authentication.getName());
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("currentUser", currentUser);
             model.addAttribute("userDto", userDto);
-            model.addAttribute("newUserDto", new NewUserDto());
-            copywritersAndCurrentUser(model, authentication);
-            return "users";
+
+            return "editUser";
         }
         userService.updateUser(userDto);
 

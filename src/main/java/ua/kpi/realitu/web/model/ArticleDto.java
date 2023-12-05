@@ -22,20 +22,24 @@ public class ArticleDto {
     @Size(max = 300, message = "Maximum size of field is 300 characters")
     private String title;
 
+    private String titleForLink;
+
     @NotBlank(message = "Field must be not blank")
     @Size(max = 100000, message = "Maximum size of field is 100.000 characters")
     private String content;
 
     private LocalDateTime creationDate;
 
+    private String creationDateString;
+
     @NotNull
     private Category category;
 
-    @NotBlank(message = "Field must be not blank")
     @Size(max = 300, message = "Maximum size of field is 300 characters")
     private String imageTitle;
 
     // Donations
+    @Size(max = 16, message = "Maximum size of field is 16 characters, do not write spaces")
     private String cardNumber;
 
     private String cardOwner;
