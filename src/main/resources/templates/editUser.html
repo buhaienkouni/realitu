@@ -17,7 +17,7 @@
             <input type="hidden" th:field="*{id}">
 
             <div class="row mb-3">
-                <div class="col-6">
+                <div class="col">
                     <label for="lastName" class="form-label">Last name</label>
                     <input type="text" class="form-control" id="lastName" placeholder=""
                            th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
@@ -25,7 +25,7 @@
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}"
                          th:errors="*{lastName}"></div>
                 </div>
-                <div class="col-5">
+                <div class="col">
                     <label for="firstName" class="form-label">First name</label>
                     <input type="text" class="form-control" id="firstName" placeholder=""
                            th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"

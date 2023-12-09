@@ -15,45 +15,51 @@
             <div class="collapse navbar-collapse" id="nav">
                 <div class="navbar-nav">
 
-                    <a class="nav-link mx-1"
+                    <a class="nav-link m-1"
                        th:classappend="${activeTab == 'home'} ? 'link-active-tab' : 'link-tab'"
                        href="/home">Home</a>
 
-                    <a class="nav-link mx-1"
+                    <a class="nav-link m-1"
                        th:classappend="${activeTab == 'histories'} ? 'link-active-tab' : 'link-tab'"
                        href="/histories">Histories & Donates</a>
 
-                    <a class="nav-link mx-1"
+                    <a class="nav-link m-1"
+                       th:classappend="${activeTab == 'suggest'} ? 'link-active-tab' : 'link-tab'"
+                       href="/suggest">Suggest</a>
+
+                    <a class="nav-link m-1"
                        th:classappend="${activeTab == 'about'} ? 'link-active-tab' : 'link-tab'"
                        href="/about">About Us</a>
 
-                    <!--                    For Copywriters and Super-->
+                    <!-- For Copywriters and Super-->
                     <a sec:authorize="hasAnyAuthority('WRITE_ARTICLE', 'WRITE_MY_ARTICLE')"
-                       class="nav-link mx-1"
+                       class="nav-link m-1"
                        th:classappend="${activeTab == 'articles'} ? 'link-active-tab' : 'link-tab'"
                        href="/articles">My Articles</a>
 
                     <a sec:authorize="hasAuthority('WRITE_USER')"
-                       class="nav-link mx-1"
+                       class="nav-link m-1"
                        th:classappend="${activeTab == 'users'} ? 'link-active-tab' : 'link-tab'"
                        href="/users">Copywriters</a>
 
-                    <form class="d-flex mx-2" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    </form>
+                </div>
 
-                    <div class="d-flex mx-2" th:if="${currentUser == null}">
-                        <a role="button" class="btn btn-outline-light" href="/login">Login</a>
-                    </div>
+                <form class="navbar-nav" role="search">
+                    <input class="form-control m-1" type="search" placeholder="Search" aria-label="Search">
+                </form>
 
-                    <div class="d-flex mx-2" th:if="${currentUser != null}">
-                        <a role="button" class="btn btn-outline-light" href="/logout">Logout</a>
-                    </div>
+                <div class="navbar-nav ms-auto">
+                    <a th:if="${currentUser == null}" role="button" class="btn btn-outline-light nav-link m-1"
+                       href="/login">Login</a>
 
+                    <a th:if="${currentUser != null}" role="button" class="btn btn-outline-light nav-link m-1"
+                       href="/logout">Logout</a>
                 </div>
             </div>
         </div>
     </nav>
 </div>
+
+
 
 </html>

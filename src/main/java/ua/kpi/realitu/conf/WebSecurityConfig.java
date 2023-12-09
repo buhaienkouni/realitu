@@ -47,8 +47,9 @@ public class WebSecurityConfig {
                 .requestMatchers(mvc.pattern("/")).permitAll()
                 .requestMatchers(mvc.pattern("/home/article/**")).permitAll()
                 .requestMatchers(mvc.pattern("/histories/**")).permitAll()
-                .requestMatchers(mvc.pattern("/about")).permitAll()
+                .requestMatchers(mvc.pattern("/suggest")).permitAll()
                 .requestMatchers(mvc.pattern("/suggest/**")).permitAll()
+                .requestMatchers(mvc.pattern("/about")).permitAll()
                 .requestMatchers(mvc.pattern("/image/**")).permitAll()
                 .requestMatchers(mvc.pattern("/style/**")).permitAll()
                 .requestMatchers(mvc.pattern("/images/**")).permitAll()
@@ -71,7 +72,6 @@ public class WebSecurityConfig {
         );
 
         http.rememberMe((rememberMe) -> rememberMe
-                //TODO: add key if needed and fix it
                 .tokenValiditySeconds(86400)
         );
 
