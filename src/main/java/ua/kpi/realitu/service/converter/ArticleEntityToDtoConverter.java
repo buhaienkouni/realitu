@@ -20,6 +20,7 @@ public class ArticleEntityToDtoConverter {
         articleDto.setTitleForLink(convertTitleForLink(articleEntity.getTitle()));
         articleDto.setContent(formatContent(articleEntity.getContent()));
         articleDto.setPreviewContent(createPreview(articleEntity.getContent(), articleEntity.getTitle()));
+        articleDto.setCreationDate(articleEntity.getCreationDate());
         articleDto.setCreationDateString(convertDataToString(articleEntity.getCreationDate()));
         articleDto.setCategory(articleEntity.getCategory());
 
