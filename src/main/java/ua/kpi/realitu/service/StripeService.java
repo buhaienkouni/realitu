@@ -6,6 +6,7 @@ import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.PaymentMethodCreateParams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class StripeService {
     @Value("${realitu.stripe.secret-test-key}")
     private String stripeSecretKey;
 
-    public void createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(String cardToken, String cardHolder, Double amount, UUID storyId) {
+    public void createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(String cardToken, String cardHolder, Double amount, String storyId) {
         try {
 
             String customerId = createCustomer(null, null, null, null);
@@ -30,7 +31,7 @@ public class StripeService {
 
             attachPaymentMethodToCustomer(paymentMethodId, customerId);
 
-            chargeCustomer(customerId, paymentMethodId, amount, storyId.toString());
+            chargeCustomer(customerId, paymentMethodId, amount, storyId);
 
         } catch (Exception e) {
             throw new RuntimeException("STRIPE: Can not create Payment");
@@ -54,14 +55,14 @@ public class StripeService {
             PaymentIntent intent = PaymentIntent.create(createParams);
 
             if ("succeeded".equals(intent.getStatus())) {
-                log.info("STRIPE :: Payment succeeded for Trip with ID: " + storyId);
+                log.info("STRIPE :: Payment succeeded for Story with ID: " + storyId);
             } else {
-                log.error("STRIPE :: Payment failed for Trip with ID: " + storyId);
+                log.error("STRIPE :: Payment failed for Story with ID: " + storyId);
             }
 
         } catch (StripeException e) {
             log.error("STRIPE :: StripeService (chargeCustomer): StripeException: " + e.getMessage());
-            throw new RuntimeException("STRIPE :: Payment failed for Trip with ID: " + storyId, e);
+            throw new RuntimeException("STRIPE :: Payment failed for Story with ID: " + storyId, e);
         }
     }
 
@@ -69,19 +70,18 @@ public class StripeService {
         Stripe.apiKey = stripeSecretKey;
 
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("type", "card");
+            Map<String, Object> paymentMethodParams = new HashMap<>();
+            paymentMethodParams.put("type", "card");
 
             Map<String, Object> cardDetails = new HashMap<>();
             cardDetails.put("token", cardToken);
+            paymentMethodParams.put("card", cardDetails);
 
             Map<String, Object> billingDetails = new HashMap<>();
             billingDetails.put("name", cardHolder);
+            paymentMethodParams.put("billing_details", billingDetails);
 
-            cardDetails.put("billing_details", billingDetails);
-            params.put("card", cardDetails);
-
-            PaymentMethod paymentMethod = PaymentMethod.create(params);
+            PaymentMethod paymentMethod = PaymentMethod.create(paymentMethodParams);
 
             log.info("STRIPE :: Card Token: " + cardToken);
             log.info("STRIPE :: Payment Method ID: " + paymentMethod.getId());

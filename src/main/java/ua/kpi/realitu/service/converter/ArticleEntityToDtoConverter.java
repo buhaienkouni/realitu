@@ -24,16 +24,11 @@ public class ArticleEntityToDtoConverter {
         articleDto.setCreationDateString(convertDataToString(articleEntity.getCreationDate()));
         articleDto.setCategory(articleEntity.getCategory());
 
-        if (articleEntity.getCategory() == Category.HISTORY &&
-                articleEntity.getCardNumber() != null &&
-                !articleEntity.getCardNumber().isEmpty()) {
-            articleDto.setCardNumber(convertCardNumber(articleEntity.getCardNumber()));
-            articleDto.setCardOwner(articleEntity.getCardOwner().trim());
-        }
-        if (articleEntity.getCategory() == Category.HISTORY &&
-                articleEntity.getMonoLink() != null &&
-                !articleEntity.getMonoLink().isEmpty()) {
-            articleDto.setMonoLink(articleEntity.getMonoLink());
+        if (articleEntity.getCategory() == Category.HISTORY) {
+            articleDto.setDonations(articleEntity.getDonations());
+            if (articleEntity.getMonoLink() != null && !articleEntity.getMonoLink().isEmpty()) {
+                articleDto.setMonoLink(articleEntity.getMonoLink());
+            }
         }
 
         articleDto.setImageTitle(articleEntity.getImageTitle());
@@ -50,8 +45,7 @@ public class ArticleEntityToDtoConverter {
         articleDto.setContent(articleEntity.getContent());
         articleDto.setCreationDateString(convertDataToString(articleEntity.getCreationDate()));
         articleDto.setCategory(articleEntity.getCategory());
-        articleDto.setCardNumber(articleEntity.getCardNumber());
-        articleDto.setCardOwner(articleEntity.getCardOwner());
+        articleDto.setDonations(articleEntity.getDonations());
         articleDto.setMonoLink(articleEntity.getMonoLink());
         articleDto.setImageTitle(articleEntity.getImageTitle());
 
@@ -74,13 +68,6 @@ public class ArticleEntityToDtoConverter {
         title = title.replaceAll("\\s+", "-");
 
         return title;
-    }
-
-    public String convertCardNumber(String cardNumber) {
-        if (cardNumber == null || cardNumber.length() != 16) {
-            return "Invalid card number format";
-        }
-        return cardNumber.replaceAll("(.{4})", "$1 ").trim();
     }
 
     public String createPreview(String content, String title) {

@@ -28,9 +28,15 @@
                             </div>
                         </div>
 
-
-                        <h2 class="mb-3">How can I help?</h2>
+                        <h2 class="mb-3" th:text="'What can I do? ' + *{donations} + '€ needed'">How can I help?</h2>
                         <ul class="mb-5">
+                            <li>
+                                <p class="fs-5">Donate from your credit card&nbsp;
+                                    <a th:href="@{'/donate/' + *{id}}" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                        Here
+                                    </a>
+                                </p>
+                            </li>
                             <li th:if="*{monoLink != null}">
                                 <p class="fs-5">Donate on&nbsp;
                                     <a th:href="*{monoLink}" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
@@ -38,12 +44,7 @@
                                     </a>
                                 </p>
                             </li>
-                            <li th:if="*{cardNumber != null}">
-                                <p class="fs-5" th:text="'Send money for ' + *{cardOwner} + ' on card:&nbsp&nbsp' + *{cardNumber}">
-                                </p>
-                            </li>
                         </ul>
-
 
                     </div>
                 </div>

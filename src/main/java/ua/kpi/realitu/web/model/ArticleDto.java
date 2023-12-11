@@ -1,10 +1,13 @@
 package ua.kpi.realitu.web.model;
 
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.springframework.format.annotation.NumberFormat;
 import org.springframework.web.multipart.MultipartFile;
 import ua.kpi.realitu.domain.enums.Category;
 
@@ -41,10 +44,8 @@ public class ArticleDto {
     private String imageTitle;
 
     // Donations
-    @Size(max = 16, message = "Maximum size of field is 16 characters, do not write spaces")
-    private String cardNumber;
-
-    private String cardOwner;
+    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private Integer donations;
 
     private String monoLink;
 

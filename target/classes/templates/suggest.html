@@ -12,7 +12,7 @@
     <div class="container container-margin py-4 px-5 white-background">
 
         <form novalidate th:action="@{/suggest/send}" id="newStory" th:object="${storyDto}" method="post">
-            <h1 class="mb-3">Create Story</h1>
+            <h1 class="mb-3">Create History</h1>
 
             <div class="mb-4">
                 <label for="personalData" class="form-label">Write here some personal information and how we can contact you</label>
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </form>
-        <div class="text-center mb-3">
+        <div class="text-center mt-2 mb-1">
             <a href="/home"
                class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover"><
                 Back Home</a>

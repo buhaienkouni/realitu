@@ -25,8 +25,7 @@ public class ArticleDtoToEntityConverter {
         articleEntity.setCreationDate(LocalDateTime.now());
         articleEntity.setCategory(articleDto.getCategory());
         articleEntity.setImageTitle(articleDto.getImageTitle().strip().trim());
-        articleEntity.setCardNumber(articleDto.getCardNumber().strip().trim());
-        articleEntity.setCardOwner(articleDto.getCardOwner().strip().trim());
+        articleEntity.setDonations(articleDto.getDonations());
         articleEntity.setMonoLink(articleDto.getMonoLink().strip().trim());
         articleEntity.setAuthor(principalUser);
 
@@ -39,8 +38,7 @@ public class ArticleDtoToEntityConverter {
         articleEntity.setContent(articleDto.getContent());
         articleEntity.setCategory(articleDto.getCategory());
         articleEntity.setImageTitle(articleDto.getImageTitle().strip().trim());
-        articleEntity.setCardNumber(articleDto.getCardNumber().strip().trim());
-        articleEntity.setCardOwner(articleDto.getCardOwner().strip().trim());
+        articleEntity.setDonations(articleDto.getDonations());
         articleEntity.setMonoLink(articleDto.getMonoLink().strip().trim());
 
         return articleEntity;

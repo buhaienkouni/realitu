@@ -50,10 +50,19 @@ public class PaymentController {
     }
 
     @PostMapping("/donate/pay")
-    public ResponseEntity<String> donateFromCard(@RequestParam("token") String token, Authentication authentication, Model model) {
+    public ResponseEntity<String> donateFromCard(
+            @RequestParam("token") String token,
+            @RequestParam("amount") String amountText,
+            @RequestParam("historyId") String historyId,
+            @RequestParam("cardholder") String cardholder,
+            Authentication authentication,
+            Model model) {
+
         currentUser(model, authentication);
+
         try {
-            stripeService.createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(token, cardHolder, amount, storyId);
+            double amount = Double.parseDouble(amountText);
+            stripeService.createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(token, cardholder, amount, historyId);
             return ResponseEntity.ok("Payment succeeded.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

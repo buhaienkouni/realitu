@@ -65,32 +65,23 @@
 
             <h3 class="mb-3">Donations</h3>
 
-            <div class="row mb-3">
-                <div class="col-7">
-                    <label for="cardNumber" class="form-label">Card number</label>
-                    <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX"
-                           th:classappend="${#fields.hasErrors('cardNumber')} ? 'is-invalid' : ''"
-                           th:field="*{cardNumber}">
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('cardNumber')}"
-                         th:errors="*{cardNumber}"></div>
+            <div class="row mb-4">
+                <div class="col-4">
+                    <label for="donations" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="donations" placeholder="100 000"
+                           th:classappend="${#fields.hasErrors('donations')} ? 'is-invalid' : ''"
+                           th:field="*{donations}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('donations')}"
+                         th:errors="*{donations}"></div>
                 </div>
-                <div class="col-5">
-                    <label for="cardOwner" class="form-label">Card owner</label>
-                    <input type="text" class="form-control" id="cardOwner" placeholder="Andriy Basenkov"
-                           th:classappend="${#fields.hasErrors('cardOwner')} ? 'is-invalid' : ''"
-                           th:field="*{cardOwner}">
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('cardOwner')}"
-                         th:errors="*{cardOwner}"></div>
+                <div class="col-8">
+                    <label for="monoLink" class="form-label">Mono Banka</label>
+                    <input type="text" class="form-control" id="monoLink" placeholder="https://send.monobank.ua/..."
+                           th:classappend="${#fields.hasErrors('monoLink')} ? 'is-invalid' : ''"
+                           th:field="*{monoLink}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('monoLink')}"
+                         th:errors="*{monoLink}"></div>
                 </div>
-            </div>
-
-            <div class="mb-4">
-                <label for="monoLink" class="form-label">Mono Banka</label>
-                <input type="text" class="form-control" id="monoLink" placeholder="https://send.monobank.ua/..."
-                       th:classappend="${#fields.hasErrors('monoLink')} ? 'is-invalid' : ''"
-                       th:field="*{monoLink}">
-                <div class="invalid-feedback" th:if="${#fields.hasErrors('monoLink')}"
-                     th:errors="*{monoLink}"></div>
             </div>
 
             <div class="row mb-4">
@@ -110,8 +101,8 @@
                 </div>
             </div>
 
-            <div class="text-center">
-                <a href="/articles" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mb-4">< Back to My Articles</a>
+            <div class="text-center mt-2 mb-1">
+                <a href="/articles" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">< Back to My Articles</a>
             </div>
 
         </form>

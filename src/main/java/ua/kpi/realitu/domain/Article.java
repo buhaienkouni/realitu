@@ -43,11 +43,8 @@ public class Article {
     @Column(name = "image_title")
     private String imageTitle;
 
-    @Column(name = "card_number")
-    private String cardNumber;
-
-    @Column(name = "card_owner")
-    private String cardOwner;
+    @Column(name = "donations")
+    private Integer donations;
 
     @Column(name = "mono_link")
     private String monoLink;
