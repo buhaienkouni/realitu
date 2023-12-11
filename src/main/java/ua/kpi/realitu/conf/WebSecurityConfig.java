@@ -47,6 +47,8 @@ public class WebSecurityConfig {
                 .requestMatchers(mvc.pattern("/")).permitAll()
                 .requestMatchers(mvc.pattern("/home/article/**")).permitAll()
                 .requestMatchers(mvc.pattern("/histories/**")).permitAll()
+                .requestMatchers(mvc.pattern("/donate/**")).permitAll()
+                .requestMatchers(mvc.pattern("/donate")).permitAll()
                 .requestMatchers(mvc.pattern("/suggest")).permitAll()
                 .requestMatchers(mvc.pattern("/suggest/**")).permitAll()
                 .requestMatchers(mvc.pattern("/about")).permitAll()

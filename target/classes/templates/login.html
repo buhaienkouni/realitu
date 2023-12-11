@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="~{fragments/head :: head('Article', null)}">
+</head>
+
+<body>
+<div class="container mt-4">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert" th:if="${param.error}">
+        <p class="mb-0">Ooops... Something went wrong))) </p>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+    <div class="alert alert-primary alert-dismissible fade show" role="alert" th:if="${param.logout}">
+        <p class="mb-0">You have been logged out.</p>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+    </div>
+</div>
+<div class="align-self-center">
+    <div class="container" style="padding-top: 15%; padding-bottom: 10%;">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-center">
+                <h1 class="mb-5">Login</h1>
+                <form class="form-signin" th:action="@{/login}" th:method="post">
+                    <div class="mb-3">
+                        <input autofocus="true" class="form-control" name="username" placeholder="Username" type="text"/>
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control" name="password" placeholder="Password" type="password"/>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-3" type="submit">
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a href="/home" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mb-4">< Back Home</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/scripts :: scripts()}"></div>
+</body>
+</html>

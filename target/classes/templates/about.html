@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:replace="~{fragments/head :: head('About', null)}">
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar('about', ${currentUser})}"></div>
+
+
+<div class="align-self-center">
+    <div class="container container-margin py-4 px-5 white-background">
+        <div class="row">
+            <div class="col">
+
+                <h1 class="mb-4 mx-2">Who we are?</h1>
+
+                <p class="mb-4 mx-2 fs-4">
+                    &nbsp;&nbsp;Welcome to <b>Realit.U</b>, a platform dedicated to important stories and news
+                    related to the war in Ukraine. We tell and show real stories of everyday heroes, people whose
+                    fortitude and determination inspire us every day.
+                </p>
+
+                <p class="mb-4 mx-2 fs-4">
+                    &nbsp;&nbsp;We not only share relevant news, but also pay special attention to the stories of people
+                    whose lives have been touched by the war. Our <b>Realit.U</b> project provides an
+                    opportunity to financially support those in need by raising funds for their real needs.
+                </p>
+
+                <p class="mb-4 mx-2 fs-4">
+                    &nbsp;&nbsp;We are proud that <b>Realit.U</b> is independent of sponsors. However, in
+                    order to keep the platform running and growing, we take a small percentage of the funds raised to
+                    support the system. This allows us to remain independent and continue to help those in difficult
+                    situations.
+                </p>
+
+                <p class="mb-5 mx-2 fs-4">
+                    &nbsp;&nbsp;Join our community to learn and support the real stories and people who, against all
+                    odds and war, continue to fight and give hope. <b>Realit.U</b> is a place where every
+                    story matters.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="text-center mb-4">
+            <a href="/home"
+               class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover"><
+                Back Home</a>
+        </div>
+
+    </div>
+
+    <div th:replace="~{fragments/scripts :: scripts()}"></div>
+</div>
+</body>
+
+</html>

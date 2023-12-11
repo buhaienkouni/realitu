@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:replace="~{fragments/head :: head('Histories', null)}">
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar('histories', ${currentUser})}"></div>
+
+
+<div class="align-self-center">
+    <div class="container container-margin py-4 px-5 white-background">
+
+        <h1 class="mb-3">Histories</h1>
+
+        <div th:if="${articlesAreEmpty}">
+            <p class="text-muted fs-4">We have not written any articles yet...</p>
+        </div>
+
+        <div th:if="${!articlesAreEmpty}">
+            <div th:each="article : ${articles}" th:object="${article}">
+                <hr>
+                <a th:href="@{'/histories/article/' + *{titleForLink} + '/' + *{id}}" style="text-decoration: none"
+                   class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">
+                    <div class="row mb-3">
+
+                        <div class="col-3">
+                            <div class="container-sm">
+                                <img th:src="@{'image/' + *{id}}" alt="Article Image"/>
+                            </div>
+                        </div>
+
+                        <div class="col-9">
+                            <p class="fs-3 mb-3" th:text="*{title}"></p>
+                            <p class="d-none d-lg-block d-xl-block d-xxl-block" th:text="*{previewContent}"></p>
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+            <hr>
+            <div class="text-center">
+                <a href="/home"
+                   class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mt-3 mb-4"><
+                    Back Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="~{fragments/scripts :: scripts()}"></div>
+</body>
+</html>

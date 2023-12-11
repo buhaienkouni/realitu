@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:replace="~{fragments/head :: head('My Articles', null)}">
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar('articles', ${currentUser})}"></div>
+
+<div class="align-self-center">
+    <div class="container container-margin py-4 px-5 white-background">
+
+        <form novalidate th:action="@{/articles/update}" id="newArticle" th:object="${article}" method="post"
+              enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{id}">
+            <input th:if="${imageId != null}" type="hidden" th:field="*{imageId}">
+            <input type="hidden" th:field="*{authorName}">
+            <input type="hidden" th:field="*{creationDateString}">
+
+            <h1 class="mb-3">Change Article</h1>
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" placeholder=""
+                       th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''"
+                       th:field="*{title}">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}"
+                     th:errors="*{title}"></div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label for="image" class="form-label" th:text="*{imageId == null} ? 'Image' : 'Image (change)'">Image</label>
+                    <input id="image" type="file" name="image" accept="image/*" class="form-control"
+                           th:field="*{image}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('image')}"
+                         th:errors="*{image}"></div>
+                </div>
+                <div class="col-8">
+                    <label for="imageTitle" class="form-label">Image title</label>
+                    <input type="text" class="form-control" id="imageTitle" placeholder=""
+                           th:classappend="${#fields.hasErrors('imageTitle')} ? 'is-invalid' : ''"
+                           th:field="*{imageTitle}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('imageTitle')}"
+                         th:errors="*{imageTitle}"></div>
+                </div>
+            </div>
+
+            <select th:field="*{category}" class="form-select mb-3">
+                <option th:each="cat : ${T(ua.kpi.realitu.domain.enums.Category).values()}"
+                        th:value="${cat}" th:text="${cat}">WAR
+                </option>
+            </select>
+
+            <div class="mb-4">
+                <label for="content" class="form-label">Content</label>
+                <textarea style="height: 150px" class="form-control" id="content" rows="3"
+                          th:classappend="${#fields.hasErrors('content')} ? 'is-invalid' : ''"
+                          th:field="*{content}"></textarea>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}"
+                     th:errors="*{content}"></div>
+            </div>
+
+            <h3 class="mb-3">Donations</h3>
+
+            <div class="row mb-3">
+                <div class="col-7">
+                    <label for="cardNumber" class="form-label">Card number</label>
+                    <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX"
+                           th:classappend="${#fields.hasErrors('cardNumber')} ? 'is-invalid' : ''"
+                           th:field="*{cardNumber}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('cardNumber')}"
+                         th:errors="*{cardNumber}"></div>
+                </div>
+                <div class="col-5">
+                    <label for="cardOwner" class="form-label">Card owner</label>
+                    <input type="text" class="form-control" id="cardOwner" placeholder="Andriy Basenkov"
+                           th:classappend="${#fields.hasErrors('cardOwner')} ? 'is-invalid' : ''"
+                           th:field="*{cardOwner}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('cardOwner')}"
+                         th:errors="*{cardOwner}"></div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="monoLink" class="form-label">Mono Banka</label>
+                <input type="text" class="form-control" id="monoLink" placeholder="https://send.monobank.ua/..."
+                       th:classappend="${#fields.hasErrors('monoLink')} ? 'is-invalid' : ''"
+                       th:field="*{monoLink}">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('monoLink')}"
+                     th:errors="*{monoLink}"></div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6 text-start">
+                    <p class="fst-italic" th:text="'Written by: ' + *{authorName}"></p>
+                </div>
+                <div class="col-6 text-end">
+                    <p class="fst-italic" th:text="*{creationDateString}"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-dark btn-text-bold rounded-4 p-3 w-100 mb-3" type="submit">
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/articles" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mb-4">< Back to My Articles</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/scripts :: scripts()}"></div>
+</body>
+
+</html>
