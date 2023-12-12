@@ -1,0 +1,3 @@
+ALTER TABLE articles DROP COLUMN card_number;
+ALTER TABLE articles DROP COLUMN card_owner;
+ALTER TABLE articles ADD COLUMN donations INTEGER NOT NULL DEFAULT 0;

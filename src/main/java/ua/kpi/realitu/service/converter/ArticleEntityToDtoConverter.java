@@ -102,7 +102,6 @@ public class ArticleEntityToDtoConverter {
     }
 
     public String formatContent(String content) {
-        content = content.replaceAll(" ", "&nbsp;");
         content = content.replaceAll("\n", "<br>");
 
         return content;

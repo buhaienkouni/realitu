@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Donate | REALIT.U</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+          integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" rel="stylesheet">
+    <link th:href="@{/style/default-style.css}" rel="stylesheet">
+
+    <!--SEO-->
+    <meta name="description" content="Realit.U is a platform dedicated to important stories and news related to the war
+                                      in Ukraine. We tell and show real stories of everyday heroes, people whose fortitude
+                                      and determination inspire us every day.">
+    <meta name="keywords" content="Realit.U, war in Ukraine, everyday heroes, war stories, fundraising,
+                                   independent platform, supporting communities, inspiring stories, hope,
+                                   community support">
+
+    <link rel="canonical" href="https://realit-u.com">
+
+    <meta property="og:title" content="Realit.U | Stories of Everyday Heroes and the War in Ukraine">
+    <meta property="og:description" content="Realit.U is a platform dedicated to sharing important stories and news
+                                             related to the war in Ukraine. We showcase real stories of everyday heroes,
+                                             individuals whose fortitude and determination inspire us. Join us to support
+                                             these communities and find inspiring narratives of hope.">
+
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+<div th:replace="~{fragments/navbar :: navbar('histories', ${currentUser})}"></div>
+
+<div class="align-self-center">
+    <div class="container payment-container container-margin py-4 px-5 white-background">
+
+        <h2 class="mb-4" th:text="${history.title}">You can help</h2>
+
+        <div class="col">
+
+            <form id="payment-form">
+                <div class="col mb-4">
+                    <div class="row mb-4">
+                        <div class="col-xl-4 col-xxl-4 col-md-6 col-sm-12 offset-xl-4 offset-xxl-4 offset-md-3 text-center">
+                            <label for="amount" class="fs-3">Amount</label>
+                            <input type="number" id="amount" name="amount" placeholder="10" class="form-control form-control-lg">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="card-number" class="fs-5">Card Number</label>
+                        <div id="card-number" class="field"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="card-expiry" class="fs-5">Expiration Date</label>
+                            <div id="card-expiry" class="field"></div>
+                        </div>
+                        <div class="col">
+                            <label for="card-cvc" class="fs-5">CVC</label>
+                            <div id="card-cvc" class="field"></div>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-xl-6 col-xxl-6 col-md-12 col-sm-12">
+                            <label for="cardholder" class="fs-5 mb-1">Cardholder</label>
+                            <input type="text" id="cardholder" name="cardholder" placeholder="Cardholder's Name" class="form-control">
+                        </div>
+                    </div>
+                    <input type="hidden" id="historyId" name="historyId" value="123">
+
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-dark btn-text-bold rounded-4 p-3 w-100" id="submit-button"
+                                    type="submit">
+                                Donate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class=" row text-center mb-2">
+                <a href="/home"
+                   class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover"><
+                    Back Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var stripe = Stripe(/*[[${stripePublishableKey}]]*/ '');
+
+    var elements = stripe.elements();
+    var cardNumber = elements.create('cardNumber');
+    var cardExpiry = elements.create('cardExpiry');
+    var cardCvc = elements.create('cardCvc');
+
+    cardNumber.mount('#card-number');
+    cardExpiry.mount('#card-expiry');
+    cardCvc.mount('#card-cvc');
+
+    var form = document.getElementById('payment-form');
+    var submitButton = document.getElementById('submit-button');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        submitButton.disabled = true;
+
+        var amountField = document.getElementById('amount');
+        var cardholderField = document.getElementById('cardholder');
+
+        // Check if the amount or cardholder field is empty
+        if (amountField.value.trim() === '') {
+            amountField.classList.add('is-invalid');
+            submitButton.disabled = false;
+            return; // Prevent further execution
+        } else {
+            amountField.classList.remove('is-invalid');
+        }
+
+        if (cardholderField.value.trim() === '') {
+            cardholderField.classList.add('is-invalid');
+            submitButton.disabled = false;
+            return; // Prevent further execution
+        } else {
+            cardholderField.classList.remove('is-invalid');
+        }
+
+        stripe.createToken(cardNumber, {})
+            .then(function(result) {
+                if (result.error) {
+                    console.error(result.error.message);
+                    submitButton.disabled = false;
+                } else {
+                    var token = result.token.id;
+                    var amount = document.getElementById('amount').value;
+                    var historyId = document.getElementById('historyId').value;
+                    var cardholder = document.getElementById('cardholder').value;
+
+                    sendTokenToServer(token, amount, historyId, cardholder);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                submitButton.disabled = false;
+            });
+    });
+
+    function sendTokenToServer(token, amount, historyId, cardholder) {
+        var formData = 'token=' + encodeURIComponent(token) +
+                       '&amount=' + encodeURIComponent(amount) +
+                       '&historyId=' + encodeURIComponent(historyId) +
+                       '&cardholder=' + encodeURIComponent(cardholder);
+
+        fetch('/donate/pay', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData
+        })
+        .then(function(response) {
+            if (response.ok) {
+                return response.text(); // Get response text
+            } else {
+                throw new Error('Server returned an error.');
+            }
+        })
+        .then(function(message) {
+            console.log('Server response:', message);
+            // Perform actions based on the message received from the server
+            // For example, display a success message or handle errors
+            alert(message); // Display the message to the user
+            window.location.reload(); // Reload the page after successful save
+        })
+        .catch(function(error) {
+            console.error('Error:', error.message);
+            alert('An error occurred. Please try again.'); // Display error to the user
+        });
+    }
+
+    var formFields = document.getElementsByClassName('field');
+
+    Array.from(formFields).forEach(function(field) {
+        field.addEventListener('change', function() {
+            if (field.classList.contains('error')) {
+                field.classList.remove('error');
+            }
+        });
+    });
+    /*]]>*/
+</script>
+
+
+<div th:replace="~{fragments/scripts :: scripts()}"></div>
+</body>
+</html>
