@@ -16,7 +16,7 @@ import ua.kpi.realitu.web.model.StoryDto;
 import java.util.Optional;
 
 @Controller
-public class SuggestController {
+public class SuccessController {
 
     @Autowired
     private SuggestService suggestService;
@@ -31,34 +31,10 @@ public class SuggestController {
         );
     }
 
-    @GetMapping("/suggest")
-    public String suggestPage(Model model, Authentication authentication) {
-
+    @GetMapping("/success")
+    public String successPage(Model model, Authentication authentication) {
         currentUser(model, authentication);
-        model.addAttribute("storyDto", new StoryDto());
 
-        return "suggest";
-    }
-
-    @PostMapping("/suggest/send")
-    public String newStory(@Valid @ModelAttribute("storyDto") StoryDto storyDto,
-                           BindingResult bindingResult, Model model, Authentication authentication) {
-
-        if (bindingResult.hasErrors()) {
-            currentUser(model, authentication);
-            model.addAttribute("storyDto", storyDto);
-
-            return "suggest";
-        }
-        try {
-            suggestService.sendStory(storyDto);
-        } catch (Exception e) {
-            currentUser(model, authentication);
-            model.addAttribute("storyDto", storyDto);
-
-            return "redirect:/success";
-        }
-
-        return "redirect:/success";
+        return "success";
     }
 }

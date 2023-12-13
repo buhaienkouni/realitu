@@ -5,11 +5,12 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentMethod;
-import com.stripe.param.PaymentIntentCreateParams;
-import com.stripe.param.PaymentMethodCreateParams;
+import com.stripe.model.Token;
+import com.stripe.param.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ua.kpi.realitu.web.model.PaymentDto;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,30 +24,41 @@ public class StripeService {
     @Value("${realitu.stripe.secret-test-key}")
     private String stripeSecretKey;
 
-    public void createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(String cardToken, String cardHolder, Double amount, String storyId) {
+    private String getFirstName(String cardholder) {
+        String[] names = cardholder.split(" ");
+        return names[0];
+    }
+
+    private String getLastName(String cardholder) {
+        String[] names = cardholder.split(" ");
+        return names[1];
+    }
+
+    public void createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(PaymentDto paymentDto) {
         try {
 
-            String customerId = createCustomer(null, null, null, null);
-            String paymentMethodId = createPaymentMethod(cardToken, cardHolder);
+            String customerId = createCustomer(null, getFirstName(paymentDto.getCardholder()), getLastName(paymentDto.getCardholder()), null);
+            String paymentMethodId = createPaymentMethod(paymentDto.getToken(), paymentDto.getCardholder());
 
             attachPaymentMethodToCustomer(paymentMethodId, customerId);
 
-            chargeCustomer(customerId, paymentMethodId, amount, storyId);
+            Double amount = Double.parseDouble(paymentDto.getAmount());
+            chargeCustomer(customerId, paymentMethodId, amount, paymentDto.getStoryId());
 
         } catch (Exception e) {
-            throw new RuntimeException("STRIPE: Can not create Payment");
+            throw new RuntimeException("STRIPE :: Can not create Payment");
         }
     }
 
-    public void chargeCustomer(String customerId, String paymentMethodId, Double amount, String storyId) {
+    public void chargeCustomer(String customerId, String paymentMethodId, Double amountInEur, String storyId) {
 
         Stripe.apiKey = stripeSecretKey;
 
         try {
             PaymentIntentCreateParams createParams = new PaymentIntentCreateParams.Builder()
-                    .setAmount((long) (amount * 100))
+                    .setAmount((long) (amountInEur * 100))
                     .setCurrency("eur")
-                    .putMetadata("story_id", storyId)
+                    .putMetadata("id", storyId)
                     .setCustomer(customerId)
                     .setPaymentMethod(paymentMethodId)
                     .setConfirm(true)
@@ -66,24 +78,23 @@ public class StripeService {
         }
     }
 
-    public String createPaymentMethod(String cardToken, String cardHolder) {
+    public String createPaymentMethod(String cardToken, String cardholder) {
+
         Stripe.apiKey = stripeSecretKey;
 
         try {
-            Map<String, Object> paymentMethodParams = new HashMap<>();
-            paymentMethodParams.put("type", "card");
-
-            Map<String, Object> cardDetails = new HashMap<>();
-            cardDetails.put("token", cardToken);
-            paymentMethodParams.put("card", cardDetails);
-
-            Map<String, Object> billingDetails = new HashMap<>();
-            billingDetails.put("name", cardHolder);
-            paymentMethodParams.put("billing_details", billingDetails);
+            PaymentMethodCreateParams paymentMethodParams = PaymentMethodCreateParams.builder()
+                    .setType(PaymentMethodCreateParams.Type.CARD)
+                    .setCard(PaymentMethodCreateParams.Token.builder()
+                            .setToken(cardToken)
+                            .build())
+                    .setBillingDetails(PaymentMethodCreateParams.BillingDetails.builder()
+                            .setName(cardholder)
+                            .build())
+                    .build();
 
             PaymentMethod paymentMethod = PaymentMethod.create(paymentMethodParams);
 
-            log.info("STRIPE :: Card Token: " + cardToken);
             log.info("STRIPE :: Payment Method ID: " + paymentMethod.getId());
             log.info("STRIPE :: Payment Method: " + paymentMethod);
             return paymentMethod.getId();
@@ -94,12 +105,28 @@ public class StripeService {
         }
     }
 
-    public void attachPaymentMethodToCustomer(String paymentMethodId, String customerId) {
+    public String createToken(String cardNumber, String expMonth, String expYear, String cvc) {
+
+        Stripe.apiKey = stripeSecretKey;
+
         try {
-            PaymentMethod paymentMethod = PaymentMethod.retrieve(paymentMethodId);
-            paymentMethod.attach(Collections.singletonMap("customer", customerId));
+            TokenCreateParams tokenCreateParams = TokenCreateParams.builder()
+                    .setCard(TokenCreateParams.Card.builder()
+                            .setNumber(cardNumber)
+                            .setExpMonth(expMonth)
+                            .setExpYear(expYear)
+                            .setCvc(cvc)
+                            .build())
+                    .build();
+
+            Token token = Token.create(tokenCreateParams);
+
+            log.info("STRIPE :: Token ID: " + token.getId());
+            log.info("STRIPE :: Token: " + token);
+            return token.getId();
+
         } catch (StripeException e) {
-            log.error("STRIPE :: StripeService (attachPaymentMethodToCustomer): StripeException: " + e.getMessage());
+            log.error("STRIPE :: StripeService (createToken): StripeException: " + e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -109,10 +136,11 @@ public class StripeService {
         Stripe.apiKey = stripeSecretKey;
 
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("email", email);
-            params.put("name", firstName + " " + lastName);
-            params.put("phone", phoneNumber);
+            CustomerCreateParams params = CustomerCreateParams.builder()
+                    .setEmail(email)
+                    .setName(firstName + " " + lastName)
+                    .setPhone(phoneNumber)
+                    .build();
 
             Customer customer = Customer.create(params);
 
@@ -121,8 +149,39 @@ public class StripeService {
             return customer.getId();
 
         } catch (StripeException e) {
-            log.error("STRIPE :: StripeService (createTestCustomerWithTestPaymentMethod): StripeException: " + e.getMessage());
+            log.error("STRIPE :: StripeService (createCustomer): StripeException: " + e.getMessage());
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void attachPaymentMethodToCustomer(String paymentMethodId, String customerId) {
+
+        Stripe.apiKey = stripeSecretKey;
+
+        try {
+            PaymentMethod paymentMethod = PaymentMethod.retrieve(paymentMethodId);
+            paymentMethod.attach(PaymentMethodAttachParams.builder()
+                    .setCustomer(customerId)
+                    .build());
+
+            log.info("STRIPE :: Payment Method attached successfully: " + paymentMethodId);
+        } catch (StripeException e) {
+            log.error("STRIPE :: StripeService (attachPaymentMethodToCustomer): StripeException: " + e.getMessage());
+            throw new RuntimeException("Failed to attach payment method: " + paymentMethodId, e);
+        }
+    }
+
+    public void detachPaymentMethod(String paymentMethodId) {
+
+        Stripe.apiKey = stripeSecretKey;
+
+        try {
+            PaymentMethod paymentMethod = PaymentMethod.retrieve(paymentMethodId);
+            paymentMethod.detach();
+            log.info("STRIPE :: Payment Method detached successfully: " + paymentMethodId);
+        } catch (StripeException e) {
+            log.error("STRIPE :: StripeService (detachPaymentMethod): StripeException: " + e.getMessage());
+            throw new RuntimeException("Failed to detach payment method: " + paymentMethodId, e);
         }
     }
 }

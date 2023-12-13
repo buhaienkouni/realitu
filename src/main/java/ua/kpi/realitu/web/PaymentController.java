@@ -18,6 +18,7 @@ import ua.kpi.realitu.service.ImageService;
 import ua.kpi.realitu.service.StripeService;
 import ua.kpi.realitu.service.UserService;
 import ua.kpi.realitu.web.model.ArticleDto;
+import ua.kpi.realitu.web.model.PaymentDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,29 +47,28 @@ public class PaymentController {
         currentUser(model, authentication);
         model.addAttribute("history", history);
         model.addAttribute("stripePublishableKey", stripePublishableKey);
+        model.addAttribute("paymentDto", new PaymentDto());
+
         return "payment";
     }
 
     @PostMapping("/donate/pay")
-    public ResponseEntity<String> donateFromCard(
-            @RequestParam("token") String token,
-            @RequestParam("amount") String amountText,
-            @RequestParam("historyId") String historyId,
-            @RequestParam("cardholder") String cardholder,
-            Authentication authentication,
-            Model model) {
-
-        currentUser(model, authentication);
+    public String donateFromCard(@ModelAttribute("paymentDto") PaymentDto paymentDto, Authentication authentication, Model model) {
 
         try {
-            double amount = Double.parseDouble(amountText);
-            stripeService.createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(token, cardholder, amount, historyId);
-            return ResponseEntity.ok("Payment succeeded.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            stripeService.createStripeCustomerSaveBusinessPaymentMethodOrChangeItForExistingCustomer(paymentDto);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment failed. Please try again.");
+            currentUser(model, authentication);
+            ArticleDto history = articleService.getArticleDtoById(UUID.fromString(paymentDto.getStoryId()));
+
+            model.addAttribute("history", history);
+            model.addAttribute("stripePublishableKey", stripePublishableKey);
+            model.addAttribute("paymentDto", paymentDto);
+
+            return "payment";
         }
+        return "redirect:/success";
     }
 
     private void currentUser(Model model, Authentication authentication) {

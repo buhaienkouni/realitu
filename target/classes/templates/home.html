@@ -15,12 +15,12 @@
             <div class="col-xxl-9 col-xl-9">
 
                 <div th:if="${latestWarArticle == null && latestPoliticArticle == null}">
-                    <h1 class="mb-3">News</h1>
+                    <h1 class="mb-3 mt-2">News</h1>
                     <p class="text-muted fs-4">We have not written any articles yet...</p>
                 </div>
 
                 <div th:if="${latestWarArticle != null}">
-                    <h1 class="mb-4 mx-2">WAR: News from Front-Line</h1>
+                    <h1 class="mb-4 mx-2 mt-2">WAR: News from Front-Line</h1>
 
                     <div th:object="${latestWarArticle}" class="mb-3">
                         <a th:href="@{'/home/article/' + *{titleForLink} + '/' + *{id}}"
