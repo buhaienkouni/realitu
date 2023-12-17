@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/head :: head('Article', null)}">
+<head th:replace="~{fragments/head :: head('Login', 'Login to create new article', 'login, user, add articles'}">
 </head>
 
 <body>
@@ -23,7 +22,8 @@
                 <h1 class="mb-5">Login</h1>
                 <form class="form-signin" th:action="@{/login}" th:method="post">
                     <div class="mb-3">
-                        <input autofocus="true" class="form-control" name="username" placeholder="Username" type="text"/>
+                        <input autofocus="true" class="form-control" name="username" placeholder="Username"
+                               type="text"/>
                     </div>
                     <div class="mb-3">
                         <input class="form-control" name="password" placeholder="Password" type="password"/>
@@ -36,7 +36,9 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <a href="/home" class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mb-4">< Back Home</a>
+                        <a href="/home"
+                           class="link-dark link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover mb-4"><
+                            Back Home</a>
                     </div>
                 </form>
             </div>

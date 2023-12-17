@@ -17,6 +17,7 @@ public class ArticleEntityToDtoConverter {
 
         articleDto.setId(articleEntity.getId());
         articleDto.setTitle(articleEntity.getTitle());
+        articleDto.setKeywords(articleEntity.getKeywords().trim());
         articleDto.setTitleForLink(convertTitleForLink(articleEntity.getTitle()));
         articleDto.setContent(formatContent(articleEntity.getContent()));
         articleDto.setPreviewContent(createPreview(articleEntity.getContent(), articleEntity.getTitle()));
@@ -42,6 +43,7 @@ public class ArticleEntityToDtoConverter {
 
         articleDto.setId(articleEntity.getId());
         articleDto.setTitle(articleEntity.getTitle());
+        articleDto.setKeywords(articleEntity.getKeywords());
         articleDto.setContent(articleEntity.getContent());
         articleDto.setCreationDateString(convertDataToString(articleEntity.getCreationDate()));
         articleDto.setCategory(articleEntity.getCategory());

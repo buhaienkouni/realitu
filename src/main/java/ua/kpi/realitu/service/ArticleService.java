@@ -38,7 +38,7 @@ public class ArticleService {
     private ArticleEntityToDtoConverter articleEntityToDtoConverter;
 
     public void createArticle(ArticleDto articleDto, UserEntity principalUser) throws IOException {
-        if (articleRepository.findByTitle(articleDto.getTitle().strip().trim()).isPresent()) {
+        if (articleRepository.findByTitle(articleDto.getTitle().trim()).isPresent()) {
             throw new RuntimeException("Article with this title already exists");
         } else {
             Article article = articleDtoToEntityConverter.create(articleDto, principalUser);
@@ -49,8 +49,8 @@ public class ArticleService {
     }
 
     public void updateArticle(ArticleDto articleDto, UserEntity principalUser) throws IOException {
-        if (articleRepository.findByTitle(articleDto.getTitle().strip().trim()).isPresent()
-                && !articleRepository.findByTitle(articleDto.getTitle().strip().trim()).get().getId().equals(articleDto.getId())) {
+        if (articleRepository.findByTitle(articleDto.getTitle().trim()).isPresent()
+                && !articleRepository.findByTitle(articleDto.getTitle().trim()).get().getId().equals(articleDto.getId())) {
             throw new RuntimeException("Article with this title already exists");
         } else {
             Article article = getArticleById(articleDto.getId());

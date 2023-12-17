@@ -2,29 +2,25 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
-<head th:fragment="head(title, article)">
+<head th:fragment="head(tabTitle, title, keywords)">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title th:text="${title} + ' | REALIT.U'">Title | REALIT.U</title>
+    <title th:text="${tabTitle} + ' | REALIT.U'">Title | REALIT.U</title>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
           integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" rel="stylesheet">
     <link th:href="@{/style/default-style.css}" rel="stylesheet">
 
     <!--SEO-->
-    <meta name="description" content="Realit.U is a platform dedicated to important stories and news related to the war
-                                      in Ukraine. We tell and show real stories of everyday heroes, people whose fortitude
-                                      and determination inspire us every day.">
-    <meta name="keywords" content="Realit.U, war in Ukraine, everyday heroes, war stories, fundraising,
-                                   independent platform, supporting communities, inspiring stories, hope,
-                                   community support">
+    <meta th:if="${title != null}" name="title" th:content="${title}">
+
+    <meta th:if="${title != null}" name="description" th:content="${title} + '. Realit.U tells and shows real stories of everyday heroes, people whose fortitude
+                                      and determination inspire us every day.'">
+
+    <meta th:if="${keywords != null}" name="keywords" th:content="${keywords} + ', war in Ukraine, everyday heroes, war stories, fundraising,
+                                   independent platform, Realit.U, supporting communities, inspiring stories, hope,
+                                   community support'">
 
     <link rel="canonical" href="https://realit-u.com">
-
-    <meta property="og:title" content="Realit.U | Stories of Everyday Heroes and the War in Ukraine">
-    <meta property="og:description" content="Realit.U is a platform dedicated to sharing important stories and news
-                                             related to the war in Ukraine. We showcase real stories of everyday heroes,
-                                             individuals whose fortitude and determination inspire us. Join us to support
-                                             these communities and find inspiring narratives of hope.">
 
     <script th:if="${article != null}" th:inline="javascript">
         /*<![CDATA[*/

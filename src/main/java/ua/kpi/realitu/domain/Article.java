@@ -29,6 +29,9 @@ public class Article {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "keywords")
+    private String keywords;
+
     @Column(name = "content")
     private String content;
 

@@ -2,7 +2,7 @@
 <html lang="eng" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 >
 
-<head th:replace="~{fragments/head :: head('My Articles', null)}">
+<head th:replace="~{fragments/head :: head('My Articles', 'Edit Article', 'change article')}">
 </head>
 
 <body>
@@ -28,6 +28,15 @@
                        th:field="*{title}">
                 <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}"
                      th:errors="*{title}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="keywords" class="form-label">Keywords</label>
+                <input type="text" class="form-control" id="keywords" placeholder="w, w, w, ..., w"
+                       th:classappend="${#fields.hasErrors('keywords')} ? 'is-invalid' : ''"
+                       th:field="*{keywords}">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('keywords')}"
+                     th:errors="*{keywords}"></div>
             </div>
 
             <div class="row mb-3">

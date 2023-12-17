@@ -25,6 +25,8 @@ public class ArticleDto {
     @Size(max = 300, message = "Maximum size of field is 300 characters")
     private String title;
 
+    private String keywords;
+
     private String titleForLink;
 
     @NotBlank(message = "Field must be not blank")
