@@ -17,7 +17,7 @@ public class ArticleEntityToDtoConverter {
 
         articleDto.setId(articleEntity.getId());
         articleDto.setTitle(articleEntity.getTitle());
-        articleDto.setKeywords(articleEntity.getKeywords().trim());
+        articleDto.setKeywords(articleEntity.getKeywords());
         articleDto.setTitleForLink(convertTitleForLink(articleEntity.getTitle()));
         articleDto.setContent(formatContent(articleEntity.getContent()));
         articleDto.setPreviewContent(createPreview(articleEntity.getContent(), articleEntity.getTitle()));
